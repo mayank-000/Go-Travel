@@ -42,7 +42,7 @@ export default function Hero() {
       />
 
       {/* Content — juno-container for centered layout */}
-      <div className="relative z-10 juno-container pb-24 md:pb-36 pt-50">
+      <div className="relative z-10 juno-container pb-20 md:pb-28 pt-16">
 
         {/* Top label */}
         <h2
@@ -54,7 +54,7 @@ export default function Hero() {
             transitionDelay: "150ms",
           }}
         >
-          India's First Invite-Only Experiential Journey Club
+          India&apos;s First Invite-Only Experiential Journey Club
         </h2>
 
         {/* Main headline */}

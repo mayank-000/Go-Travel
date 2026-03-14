@@ -4,7 +4,7 @@ export default function ClosingCTA() {
   return (
     <section
       className="relative overflow-hidden"
-      style={{ backgroundColor: "var(--charcoal)" }}
+      style={{ backgroundColor: "var(--navy)" }}  // FIXED: was var(--charcoal), now navy for continuity with Testimonials
     >
       {/* Radial accent */}
       <div
@@ -15,7 +15,13 @@ export default function ClosingCTA() {
         }}
       />
 
-      <div className="juno-container py-32 md:py-44 text-center flex flex-col items-center gap-10 relative z-10">
+      {/* Thin separator so it doesn't fully bleed into Testimonials */}
+      <div
+        className="absolute top-0 left-0 right-0"
+        style={{ borderTop: "1px solid rgba(219,175,132,0.15)" }}
+      />
+
+      <div className="juno-container juno-section text-center flex flex-col items-center gap-8 relative z-10">
 
         <span
           className="font-heading text-[9px] tracking-[0.4em] uppercase"
@@ -32,7 +38,7 @@ export default function ClosingCTA() {
             maxWidth: "700px",
           }}
         >
-          This isn't for everyone.
+          This isn&apos;t for everyone.
           <br />
           <span style={{ color: "var(--ochre)" }}>Is it for you?</span>
         </h2>

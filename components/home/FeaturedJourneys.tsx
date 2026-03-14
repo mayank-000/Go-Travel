@@ -33,18 +33,18 @@ const journeys = [
 export default function FeaturedJourneys() {
   return (
     <section
-      className="py-32 md:py-40"
-      style={{ backgroundColor: "#F5F3E4" }}
+      className="juno-section"
+      style={{ backgroundColor: "var(--cream)" }}
     >
-      <div className="max-w-7xl mx-auto px-8 md:px-12">
+      <div className="juno-container">
         {/* Header row */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 md:mb-12">
           <div>
             <span
               className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-4"
               style={{ color: "var(--sage)" }}
             >
-              Upcoming Journeys
+              Featured Journeys
             </span>
             <h2
               className="font-serif italic leading-tight"
@@ -63,23 +63,25 @@ export default function FeaturedJourneys() {
             className="font-heading text-xs tracking-[0.2em] uppercase border-b pb-1 w-fit transition-all duration-300 hover:opacity-60 shrink-0"
             style={{
               color: "var(--navy)",
-              borderColor: "var(--ochre)",
+              borderColor: "var(--border-accent)",
             }}
           >
             View all journeys →
           </Link>
         </div>
 
-        {/* Journey cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {journeys.map((journey, i) => (
-            <Link
-              href={`/trips/${journey.id}`}
-              key={journey.id}
-              className="group flex flex-col overflow-hidden"
-            >
-              {/* Image */}
-              <div className="relative overflow-hidden aspect-[4/5]">
+        {/* Journey carousel */}
+        <div className="relative -mx-4 md:mx-0">
+          <div className="flex gap-5 md:gap-7 overflow-x-auto scroll-smooth pb-2 md:pb-3 px-4 md:px-0 snap-x snap-mandatory">
+            {journeys.map((journey) => (
+              <Link
+                href={`/trips/${journey.id}`}
+                key={journey.id}
+                className="group flex flex-col min-w-[260px] max-w-sm md:max-w-none md:flex-1 snap-start overflow-hidden rounded-(--card-radius) border shadow-sm bg-cream"
+                style={{ borderColor: "var(--border-subtle)" }}
+              >
+                {/* Image */}
+                <div className="relative overflow-hidden aspect-4/5 rounded-t-(--card-radius)">
                 <div
                   className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                   style={{ backgroundImage: `url('${journey.image}')` }}
@@ -88,26 +90,26 @@ export default function FeaturedJourneys() {
                 <div
                   className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-40"
                   style={{
-                    background: "linear-gradient(to top, rgba(27,59,87,0.5) 0%, transparent 60%)",
+                    background: "linear-gradient(to top, rgba(42,77,106,0.5) 0%, transparent 60%)",
                   }}
                 />
-                {/* Tag */}
-                <span
-                  className="absolute top-5 left-5 font-heading text-[9px] tracking-[0.25em] uppercase px-3 py-1.5"
-                  style={{
-                    backgroundColor: "rgba(252,250,233,0.9)",
-                    color: "var(--navy)",
-                  }}
-                >
-                  {journey.tag}
-                </span>
-              </div>
+                  {/* Tag */}
+                  <span
+                    className="absolute top-4 left-4 font-heading text-[9px] tracking-[0.25em] uppercase px-3 py-1.5 rounded-sm"
+                    style={{
+                      backgroundColor: "var(--cream)",
+                      color: "var(--navy)",
+                    }}
+                  >
+                    {journey.tag}
+                  </span>
+                </div>
 
-              {/* Content */}
-              <div
-                className="flex flex-col gap-3 p-6 flex-1"
-                style={{ backgroundColor: "var(--cream)" }}
-              >
+                {/* Content */}
+                <div
+                  className="flex flex-col gap-5 px-7 py-8 md:px-9 md:py-10 flex-1 rounded-b-(--card-radius) border-t"
+                  style={{ backgroundColor: "var(--cream)", borderColor: "var(--border-subtle)" }}
+                >
                 <div className="flex items-center justify-between">
                   <span
                     className="font-heading text-[9px] tracking-[0.25em] uppercase"
@@ -133,25 +135,26 @@ export default function FeaturedJourneys() {
                   {journey.name}
                 </h3>
 
-                <p
-                  className="font-heading text-sm leading-relaxed"
-                  style={{ color: "rgba(44,44,44,0.6)" }}
-                >
-                  {journey.tagline}
-                </p>
+                  <p
+                    className="font-heading text-sm leading-relaxed"
+                    style={{ color: "var(--charcoal)", opacity: 0.7 }}
+                  >
+                    {journey.tagline}
+                  </p>
 
-                <span
-                  className="font-heading text-xs tracking-[0.2em] uppercase mt-auto pt-4 border-t w-fit transition-all duration-300 group-hover:opacity-60"
-                  style={{
-                    color: "var(--navy)",
-                    borderColor: "rgba(219,175,132,0.3)",
-                  }}
-                >
-                  Request Invite →
-                </span>
-              </div>
-            </Link>
-          ))}
+                  <span
+                    className="font-heading text-xs tracking-[0.2em] uppercase mt-auto pt-4 border-t w-fit transition-all duration-300 group-hover:opacity-60"
+                    style={{
+                      color: "var(--navy)",
+                      borderColor: "var(--border-accent)",
+                    }}
+                  >
+                    Request Invite →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>

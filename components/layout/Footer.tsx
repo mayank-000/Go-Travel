@@ -2,9 +2,9 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: "var(--navy)" }}>
-      <div className="juno-container py-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-14 md:gap-8 mb-16">
+    <footer style={{ backgroundColor: "var(--navy)", borderTop: "1px solid rgba(200,135,58,0.15)" }}>
+      <div className="juno-container py-12 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-12">
 
           {/* Brand */}
           <div className="flex flex-col gap-5">
@@ -21,15 +21,12 @@ export default function Footer() {
             </div>
             <p
               className="font-heading text-sm leading-relaxed max-w-xs"
-              style={{ color: "rgba(252,250,233,0.45)" }}
+              style={{ color: "rgba(248,244,236,0.45)" }}
             >
-              India's first invite-only experiential journey club. A quiet circle
+              India&apos;s first invite-only experiential journey club. A quiet circle
               of people who choose depth over noise.
             </p>
-            <p
-              className="font-heading text-xs"
-              style={{ color: "rgba(152,165,156,0.7)" }}
-            >
+            <p className="font-heading text-xs" style={{ color: "rgba(138,158,143,0.7)" }}>
               📧 hello@junojourneys.in
             </p>
           </div>
@@ -54,7 +51,7 @@ export default function Footer() {
                 key={href}
                 href={href}
                 className="font-heading text-sm transition-opacity duration-300 hover:opacity-50 w-fit"
-                style={{ color: "rgba(252,250,233,0.65)" }}
+                style={{ color: "rgba(248,244,236,0.65)" }}
               >
                 {label}
               </Link>
@@ -71,7 +68,7 @@ export default function Footer() {
             </p>
             <p
               className="font-heading text-sm leading-relaxed"
-              style={{ color: "rgba(252,250,233,0.45)" }}
+              style={{ color: "rgba(248,244,236,0.45)" }}
             >
               Our journeys are invite-only, limited to 12 people. Apply to join
               the JUNO inner circle.
@@ -86,10 +83,7 @@ export default function Footer() {
             >
               Request Invite →
             </Link>
-            <p
-              className="font-heading text-xs mt-2"
-              style={{ color: "rgba(152,165,156,0.6)" }}
-            >
+            <p className="font-heading text-xs mt-2" style={{ color: "rgba(138,158,143,0.6)" }}>
               📱 @junojourneys
             </p>
           </div>
@@ -98,14 +92,14 @@ export default function Footer() {
         {/* Bottom */}
         <div
           className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-8 border-t"
-          style={{ borderColor: "rgba(152,165,156,0.12)" }}
+          style={{ borderColor: "rgba(138,158,143,0.12)" }}
         >
-          <p className="font-heading text-xs" style={{ color: "rgba(252,250,233,0.25)" }}>
+          <p className="font-heading text-xs" style={{ color: "rgba(248,244,236,0.25)" }}>
             © {new Date().getFullYear()} JUNO Journeys. All rights reserved.
           </p>
           <p
             className="font-heading text-[10px] tracking-[0.2em] uppercase"
-            style={{ color: "rgba(152,165,156,0.4)" }}
+            style={{ color: "rgba(138,158,143,0.4)" }}
           >
             Curated with intention · Made in India
           </p>

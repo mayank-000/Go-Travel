@@ -30,15 +30,15 @@ const galleryImages = [
 
 export default function GalleryTeaser() {
   return (
-    <section style={{ backgroundColor: "var(--cream)" }}>
+    <section className="juno-section" style={{ backgroundColor: "var(--cream)" }}>
 
       {/* Tension line */}
       <div
-        className="py-24 md:py-32 text-center border-b"
-        style={{ borderColor: "rgba(219,175,132,0.18)" }}
+        className="juno-container pt-2 pb-8 md:pb-10 text-center border-b"
+        style={{ borderColor: "var(--border-accent)" }}
       >
         <h2
-          className="font-serif italic px-6"
+          className="font-serif italic"
           style={{
             fontSize: "clamp(2rem, 4vw, 3.2rem)",
             color: "var(--navy)",
@@ -53,9 +53,9 @@ export default function GalleryTeaser() {
       </div>
 
       {/* Gallery section */}
-      <div className="juno-container py-24 md:py-32">
+      <div className="juno-container pt-10 md:pt-14">
 
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <span
               className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-3"
@@ -81,7 +81,7 @@ export default function GalleryTeaser() {
         </div>
 
         {/* Image grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-3 h-[420px] md:h-[520px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-[380px] md:h-[480px]">
           {galleryImages.map((img, i) => (
             <div
               key={i}

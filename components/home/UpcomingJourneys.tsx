@@ -2,11 +2,11 @@ import Link from "next/link";
 
 export default function UpcomingJourneys() {
   return (
-    <section style={{ backgroundColor: "#F7F4E6" }}>
-      <div className="juno-container py-24 md:py-36">
+    <section className="juno-section" style={{ backgroundColor: "var(--cream)" }}>
+      <div className="juno-container">
 
         {/* Header */}
-        <div className="mb-14">
+        <div className="mb-10 md:mb-12">
           <span
             className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-4"
             style={{ color: "var(--sage)" }}
@@ -33,114 +33,128 @@ export default function UpcomingJourneys() {
           </p>
         </div>
 
-        {/* Featured trip card */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-5 overflow-hidden"
-          style={{ border: "1px solid rgba(219,175,132,0.3)" }}
-        >
-          {/* Image */}
-          <div className="md:col-span-2 relative overflow-hidden min-h-[280px] md:min-h-0">
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 hover:scale-105"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=700&q=80')",
-              }}
-            />
-            {/* Tag */}
-            <span
-              className="absolute top-5 left-5 font-heading text-[9px] tracking-[0.25em] uppercase px-3 py-1.5"
-              style={{ backgroundColor: "rgba(252,250,233,0.92)", color: "var(--navy)" }}
-            >
-              Craft
-            </span>
-          </div>
-
-          {/* Content */}
-          <div
-            className="md:col-span-3 flex flex-col gap-5 p-8 md:p-12"
-            style={{ backgroundColor: "var(--cream)" }}
-          >
-            <div className="flex flex-wrap items-center gap-4">
-              <span
-                className="font-heading text-[9px] tracking-[0.22em] uppercase"
-                style={{ color: "var(--sage)" }}
+        {/* Vertical journey cards carousel (image placeholder on top) */}
+        <div className="relative -mx-4 md:mx-0">
+          <div className="flex gap-5 md:gap-7 overflow-x-auto scroll-smooth pb-3 px-4 md:px-0 snap-x snap-mandatory no-scrollbar">
+            {[
+              {
+                title: "Clay & Quiet",
+                meta: "A Potter's Weekend, Khurja",
+                location: "Khurja, Uttar Pradesh",
+                when: "Coming Soon",
+                tag: "Craft",
+              },
+              {
+                title: "Salt & Swell",
+                meta: "Surf & Fire, Basque Country",
+                location: "Basque Country, Spain",
+                when: "Waitlist Open",
+                tag: "Sea",
+              },
+              {
+                title: "High Atlas Immersion",
+                meta: "Weaving & Walking, Morocco",
+                location: "High Atlas, Morocco",
+                when: "2026 · Spring",
+                tag: "Culture",
+              },
+              {
+                title: "Tea & Timber",
+                meta: "Forest Cabin Week, Himachal",
+                location: "Himachal Pradesh, India",
+                when: "Coming Soon",
+                tag: "Retreat",
+              },
+              {
+                title: "Salt Pan Evenings",
+                meta: "Craft & Stars, Kutch",
+                location: "Kutch, Gujarat",
+                when: "2026 · Winter",
+                tag: "Night",
+              },
+            ].map((trip) => (
+              <div
+                key={trip.title}
+                className="group flex flex-col min-w-[270px] max-w-sm md:min-w-[310px] snap-start rounded-[var(--card-radius)] border shadow-sm bg-cream overflow-hidden"
+                style={{ borderColor: "var(--border-accent)" }}
               >
-                📍 Khurja, Uttar Pradesh
-              </span>
-              <span
-                className="font-heading text-[9px] tracking-[0.22em] uppercase"
-                style={{ color: "var(--sand)" }}
-              >
-                📅 Coming Soon
-              </span>
-              <span
-                className="font-heading text-[9px] tracking-[0.22em] uppercase"
-                style={{ color: "var(--sage)" }}
-              >
-                👥 12 seats
-              </span>
-            </div>
+                {/* IMAGE AREA – add background later */}
+                <div className="relative h-60 md:h-72 bg-[#e5ddcf]">
+                  {/* Replace this background with your own image later:
+                     e.g. style={{ backgroundImage: "url('/your-image.jpg')", backgroundSize: 'cover', backgroundPosition: 'center' }} */}
+                  <span
+                    className="absolute top-5 left-5 font-heading text-[9px] tracking-[0.25em] uppercase px-3 py-1.5"
+                    style={{ backgroundColor: "rgba(247,243,234,0.96)", color: "var(--navy)" }}
+                  >
+                    {trip.tag}
+                  </span>
+                </div>
 
-            <h3
-              className="font-serif italic leading-tight"
-              style={{
-                fontSize: "clamp(1.6rem, 3vw, 2.4rem)",
-                color: "var(--navy)",
-              }}
-            >
-              Clay &amp; Quiet
-            </h3>
-            <p
-              className="font-heading text-[11px] tracking-[0.15em] uppercase"
-              style={{ color: "var(--sage)" }}
-            >
-              A Potter's Weekend, Khurja
-            </p>
+                {/* CONTENT */}
+                <div className="flex flex-col gap-5 px-8 py-8 md:px-9 md:py-9 flex-1">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span
+                      className="font-heading text-[9px] tracking-[0.22em] uppercase"
+                      style={{ color: "var(--sage)" }}
+                    >
+                      📍 {trip.location}
+                    </span>
+                    <span
+                      className="font-heading text-[9px] tracking-[0.22em] uppercase"
+                      style={{ color: "var(--sand)" }}
+                    >
+                      📅 {trip.when}
+                    </span>
+                  </div>
 
-            <p
-              className="font-heading text-sm leading-relaxed"
-              style={{ color: "rgba(44,44,44,0.62)", fontWeight: 300 }}
-            >
-              Coming soon to a quiet courtyard in Khurja. Wheel-thrown. Sun-dried.
-              Fired at dawn. A weekend with a master potter and eleven strangers
-              who will stop feeling like strangers.
-            </p>
+                  <div className="space-y-2">
+                    <h3
+                      className="font-serif italic leading-tight"
+                      style={{
+                        fontSize: "clamp(1.6rem, 2.4vw, 2.2rem)",
+                        color: "var(--navy)",
+                      }}
+                    >
+                      {trip.title}
+                    </h3>
+                    <p
+                      className="font-heading text-[11px] tracking-[0.15em] uppercase"
+                      style={{ color: "var(--sage)" }}
+                    >
+                      {trip.meta}
+                    </p>
+                  </div>
 
-            <p
-              className="font-heading text-xs"
-              style={{ color: "rgba(44,44,44,0.45)" }}
-            >
-              Includes: Door-to-door transport · Curated stay · Full workshop access · Meals
-            </p>
+                  <p
+                    className="font-heading text-sm leading-relaxed"
+                    style={{ color: "rgba(44,44,44,0.62)", fontWeight: 300 }}
+                  >
+                    Add your journey description here — enough lines so it feels
+                    like a story, not a label.
+                  </p>
 
-            <div className="flex items-center gap-2 mt-2">
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse"
-                style={{ backgroundColor: "var(--ochre)" }}
-              />
-              <span
-                className="font-heading text-xs tracking-[0.15em] uppercase"
-                style={{ color: "var(--ochre)" }}
-              >
-                Seats are limited. Always.
-              </span>
-            </div>
-
-            <Link
-              href="/invite"
-              className="font-heading text-xs tracking-[0.2em] uppercase px-8 py-4 w-fit mt-2 transition-all duration-300 hover:opacity-85"
-              style={{ backgroundColor: "var(--ochre)", color: "var(--navy)" }}
-            >
-              I want in →
-            </Link>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ backgroundColor: "var(--ochre)" }}
+                    />
+                    <span
+                      className="font-heading text-xs tracking-[0.15em] uppercase"
+                      style={{ color: "var(--ochre)" }}
+                    >
+                      Seats are limited.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* The Promise */}
         <div
-          className="mt-10 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-0 justify-between"
-          style={{ backgroundColor: "rgba(27,59,87,0.06)", border: "1px solid rgba(219,175,132,0.25)" }}
+          className="mt-10 md:mt-12 p-6 md:p-8 rounded-[var(--card-radius)] flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-0 justify-between border"
+          style={{ backgroundColor: "rgba(42,77,106,0.05)", borderColor: "var(--border-subtle)" }}
         >
           <p
             className="font-serif italic"

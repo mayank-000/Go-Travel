@@ -24,11 +24,11 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section style={{ backgroundColor: "var(--navy)" }}>
-      <div className="juno-container py-24 md:py-36">
+    <section className="juno-section" style={{ backgroundColor: "var(--navy)" }}>
+      <div className="juno-container">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-12">
           <span
             className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-5"
             style={{ color: "var(--sage)" }}
@@ -37,20 +37,13 @@ export default function Testimonials() {
           </span>
           <h2
             className="font-serif italic mb-4"
-            style={{
-              fontSize: "clamp(2rem, 3.5vw, 3rem)",
-              color: "var(--cream)",
-            }}
+            style={{ fontSize: "clamp(2rem, 3.5vw, 3rem)", color: "var(--cream)" }}
           >
             Their words say what ours cannot.
           </h2>
           <p
             className="font-heading text-sm mx-auto"
-            style={{
-              color: "rgba(252,250,233,0.45)",
-              maxWidth: "460px",
-              fontWeight: 300,
-            }}
+            style={{ color: "rgba(248,244,236,0.45)", maxWidth: "460px", fontWeight: 300 }}
           >
             From the first touch of wet clay to the long drive home in silence —
             discover what our guests say about their journeys with JUNO.
@@ -58,54 +51,42 @@ export default function Testimonials() {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="flex flex-col gap-6 p-8"
+              className="flex flex-col gap-5 p-6 md:p-7 rounded-[var(--card-radius)] border"
               style={{
-                backgroundColor: "rgba(252,250,233,0.08)",
-                border: "1px solid rgba(219,175,132,0.2)",
+                backgroundColor: "rgba(247,243,234,0.08)",
+                borderColor: "rgba(228,184,150,0.22)",  
               }}
             >
-              {/* Quote mark */}
               <span
                 className="font-serif italic text-4xl leading-none"
                 style={{ color: "var(--ochre)", opacity: 0.6 }}
               >
-                "
+                
               </span>
 
               <p
                 className="font-heading text-sm leading-relaxed flex-1"
-                style={{ color: "rgba(252,250,233,0.88)", fontWeight: 300 }}
+                style={{ color: "rgba(248,244,236,0.88)", fontWeight: 300 }}
               >
                 {t.quote}
               </p>
 
-              {/* Divider */}
-              <div
-                className="w-8 h-px"
-                style={{ backgroundColor: "rgba(219,175,132,0.3)" }}
-              />
+              <div className="w-8 h-px" style={{ backgroundColor: "rgba(219,175,132,0.3)" }} />
 
-              {/* Author */}
               <div className="flex items-center gap-4">
                 <div
                   className="w-10 h-10 rounded-full bg-cover bg-center shrink-0"
                   style={{ backgroundImage: `url('${t.image}')` }}
                 />
                 <div>
-                  <p
-                    className="font-heading text-sm font-medium"
-                    style={{ color: "var(--cream)" }}
-                  >
+                  <p className="font-heading text-sm font-medium" style={{ color: "var(--cream)" }}>
                     {t.name}
                   </p>
-                  <p
-                    className="font-heading text-xs"
-                    style={{ color: "rgba(152,165,156,0.7)" }}
-                  >
+                  <p className="font-heading text-xs" style={{ color: "rgba(138,158,143,0.7)" }}>
                     {t.role}
                   </p>
                 </div>

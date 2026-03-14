@@ -24,12 +24,12 @@ const pillars = [
 export default function Philosophy() {
   return (
     <section
-      className="py-32 md:py-40"
+      className="juno-section"
       style={{ backgroundColor: "var(--cream)" }}
     >
-      <div className="max-w-7xl mx-auto px-8 md:px-12">
+      <div className="juno-container">
         {/* Section label */}
-        <div className="flex items-center gap-6 mb-20">
+        <div className="flex items-center gap-6 mb-10 md:mb-12">
           <span
             className="font-heading text-[9px] tracking-[0.35em] uppercase"
             style={{ color: "var(--sage)" }}
@@ -38,17 +38,17 @@ export default function Philosophy() {
           </span>
           <div
             className="h-px flex-1 max-w-24"
-            style={{ backgroundColor: "var(--sand)", opacity: 0.4 }}
+            style={{ backgroundColor: "var(--border-accent)" }}
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px"
-          style={{ backgroundColor: "rgba(219,175,132,0.15)" }}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px rounded-(--card-radius) overflow-hidden border"
+          style={{ backgroundColor: "var(--border-accent)" }}
         >
           {pillars.map((pillar) => (
             <div
               key={pillar.number}
-              className="group flex flex-col gap-8 p-10 md:p-14 transition-colors duration-500 hover:bg-[var(--navy)]"
+              className="group flex flex-col gap-5 px-9 py-9 md:px-12 md:py-12 transition-colors duration-500 hover:bg-navy"
               style={{ backgroundColor: "var(--cream)" }}
             >
               <span
@@ -70,8 +70,8 @@ export default function Philosophy() {
               </h3>
 
               <p
-                className="font-heading text-sm leading-relaxed transition-colors duration-500 group-hover:text-[rgba(252,250,233,0.65)]"
-                style={{ color: "rgba(44,44,44,0.65)" }}
+                className="font-heading text-sm leading-relaxed transition-colors duration-500 group-hover:text-[rgba(247,243,234,0.75)]"
+                style={{ color: "var(--charcoal)", opacity: 0.7 }}
               >
                 {pillar.description}
               </p>
