@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+
 const testimonials = [
   {
     quote:
@@ -23,12 +27,41 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const els = sectionRef.current?.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!els) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).style.opacity = "1";
+            (e.target as HTMLElement).style.transform = "translateY(0)";
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   return (
-    <section className="juno-section" style={{ backgroundColor: "var(--navy)" }}>
+    <section
+      ref={sectionRef}
+      className="juno-section"
+      style={{ backgroundColor: "var(--navy)" }}
+    >
       <div className="juno-container">
 
         {/* Header */}
-        <div className="text-center mb-10 md:mb-12">
+        <div
+          data-reveal
+          className="text-center mb-12 md:mb-14"
+          style={{ opacity: 0, transform: "translateY(24px)", transition: "opacity .75s ease, transform .75s ease" }}
+        >
           <span
             className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-5"
             style={{ color: "var(--sage)" }}
@@ -51,21 +84,25 @@ export default function Testimonials() {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           {testimonials.map((t, i) => (
             <div
               key={i}
-              className="flex flex-col gap-5 p-6 md:p-7 rounded-[var(--card-radius)] border"
+              data-reveal
+              className="flex flex-col gap-6 p-8 md:p-9 rounded-[var(--card-radius)] border transition-all duration-300 hover:bg-[rgba(247,243,234,0.11)]"
               style={{
-                backgroundColor: "rgba(247,243,234,0.08)",
-                borderColor: "rgba(228,184,150,0.22)",  
+                backgroundColor: "rgba(247,243,234,0.07)",
+                borderColor: "rgba(228,184,150,0.2)",
+                opacity: 0,
+                transform: "translateY(28px)",
+                transition: `opacity .75s ease ${i * 0.1}s, transform .75s ease ${i * 0.1}s`,
               }}
             >
               <span
                 className="font-serif italic text-4xl leading-none"
                 style={{ color: "var(--ochre)", opacity: 0.6 }}
               >
-                
+                &apos;
               </span>
 
               <p
@@ -79,14 +116,14 @@ export default function Testimonials() {
 
               <div className="flex items-center gap-4">
                 <div
-                  className="w-10 h-10 rounded-full bg-cover bg-center shrink-0"
+                  className="w-11 h-11 rounded-full bg-cover bg-center shrink-0"
                   style={{ backgroundImage: `url('${t.image}')` }}
                 />
                 <div>
                   <p className="font-heading text-sm font-medium" style={{ color: "var(--cream)" }}>
                     {t.name}
                   </p>
-                  <p className="font-heading text-xs" style={{ color: "rgba(138,158,143,0.7)" }}>
+                  <p className="font-heading text-xs mt-0.5" style={{ color: "rgba(138,158,143,0.7)" }}>
                     {t.role}
                   </p>
                 </div>
@@ -94,6 +131,7 @@ export default function Testimonials() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

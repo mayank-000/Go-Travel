@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
 const pillars = [
   {
     number: "01",
@@ -22,33 +24,62 @@ const pillars = [
 ];
 
 export default function Philosophy() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const els = sectionRef.current?.querySelectorAll<HTMLElement>("[data-reveal]");
+    if (!els) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            (e.target as HTMLElement).style.opacity = "1";
+            (e.target as HTMLElement).style.transform = "translateY(0)";
+            obs.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.14 }
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       className="juno-section"
       style={{ backgroundColor: "var(--cream)" }}
     >
       <div className="juno-container">
-        {/* Section label */}
-        <div className="flex items-center gap-6 mb-10 md:mb-12">
-          <span
-            className="font-heading text-[9px] tracking-[0.35em] uppercase"
-            style={{ color: "var(--sage)" }}
-          >
+
+        {/* Label */}
+        <div
+          data-reveal
+          className="flex items-center gap-6 mb-12 md:mb-14"
+          style={{ opacity: 0, transform: "translateY(20px)", transition: "opacity .7s ease, transform .7s ease" }}
+        >
+          <span className="font-heading text-[9px] tracking-[0.35em] uppercase" style={{ color: "var(--sage)" }}>
             Our Philosophy
           </span>
-          <div
-            className="h-px flex-1 max-w-24"
-            style={{ backgroundColor: "var(--border-accent)" }}
-          />
+          <div className="h-px flex-1 max-w-24" style={{ backgroundColor: "var(--border-accent)" }} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px rounded-(--card-radius) overflow-hidden border"
-          style={{ backgroundColor: "var(--border-accent)" }}
+        {/* Pillars grid */}
+        <div
+          data-reveal
+          className="grid grid-cols-1 md:grid-cols-3 gap-px rounded-(--card-radius) overflow-hidden border"
+          style={{
+            backgroundColor: "var(--border-accent)",
+            opacity: 0,
+            transform: "translateY(28px)",
+            transition: "opacity .75s ease .12s, transform .75s ease .12s",
+          }}
         >
           {pillars.map((pillar) => (
             <div
               key={pillar.number}
-              className="group flex flex-col gap-5 px-9 py-9 md:px-12 md:py-12 transition-colors duration-500 hover:bg-navy"
+              className="group flex flex-col gap-6 px-10 py-11 md:px-12 md:py-14 transition-colors duration-500 hover:bg-navy"
               style={{ backgroundColor: "var(--cream)" }}
             >
               <span
@@ -63,7 +94,7 @@ export default function Philosophy() {
                 style={{
                   fontSize: "clamp(2rem, 3.5vw, 3rem)",
                   color: "var(--navy)",
-                  lineHeight: 1.1,
+                  lineHeight: 1.08,
                 }}
               >
                 {pillar.title}
@@ -76,7 +107,6 @@ export default function Philosophy() {
                 {pillar.description}
               </p>
 
-              {/* Decorative line */}
               <div
                 className="w-8 h-px mt-auto transition-all duration-500 group-hover:w-16"
                 style={{ backgroundColor: "var(--ochre)" }}
@@ -84,6 +114,7 @@ export default function Philosophy() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

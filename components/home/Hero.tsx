@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import FormContainer from "../form/FormContainer";
 
 export default function Hero() {
   const [loaded, setLoaded] = useState(false);
@@ -11,8 +11,14 @@ export default function Hero() {
     return () => clearTimeout(t);
   }, []);
 
+  export default function handleForm = () => {
+    return (
+      <FormContainer />
+    )
+  };
+
   return (
-    <section className="relative min-h-screen flex flex-col justify-end overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-end overflow-visible">
       {/* Cinematic background */}
       <div
         className="absolute inset-0 bg-cover bg-center transition-transform duration-[9000ms] ease-out"
@@ -43,7 +49,6 @@ export default function Hero() {
 
       {/* Content — juno-container for centered layout */}
       <div className="relative z-10 juno-container pb-20 md:pb-28 pt-16">
-
         {/* Top label */}
         <h2
           className="font-heading text-[13px] tracking-[0.38em] uppercase mb-7 transition-all duration-700"
@@ -86,37 +91,17 @@ export default function Hero() {
             transitionDelay: "460ms",
           }}
         >
-          A quiet circle of people who choose depth over noise,
-          and making over scrolling.
+          A quiet circle of people who choose depth over noise, and making over
+          scrolling.
         </p>
-
-        {/* CTAs */}
-        <div
-          className="flex flex-col sm:flex-row gap-3 transition-all duration-700"
-          style={{
-            opacity: loaded ? 1 : 0,
-            transform: loaded ? "translateY(0)" : "translateY(14px)",
-            transitionDelay: "600ms",
-          }}
+      </div>
+      <div className="relative z-10 juno-container pb-20 md:pb-28 pt-16">
+        <button
+          onClick={handleForm}
+          className="invite-button font-bold text-xs tracking-[0.22em] uppercase px-9 py-4 text-center"
         >
-          <Link
-            href="/invite"
-            className="font-heading text-xs tracking-[0.22em] uppercase px-9 py-4 text-center transition-all duration-300 hover:opacity-85 w-fit"
-            style={{ backgroundColor: "var(--ochre)", color: "var(--navy)" }}
-          >
-            Request Invite →
-          </Link>
-          <Link
-            href="/trips"
-            className="font-heading text-xs tracking-[0.22em] uppercase px-9 py-4 text-center border transition-all duration-300 hover:bg-white/10 w-fit"
-            style={{
-              borderColor: "rgba(252,250,233,0.3)",
-              color: "var(--cream)",
-            }}
-          >
-            View Journeys
-          </Link>
-        </div>
+          Request Invite →
+        </button>
       </div>
 
       {/* Scroll indicator */}
@@ -130,7 +115,10 @@ export default function Hero() {
         >
           Scroll
         </span>
-        <div className="w-px h-10 animate-pulse" style={{ backgroundColor: "var(--sand)" }} />
+        <div
+          className="w-px h-10 animate-pulse"
+          style={{ backgroundColor: "var(--sand)" }}
+        />
       </div>
     </section>
   );
