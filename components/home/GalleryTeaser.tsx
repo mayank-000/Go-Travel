@@ -1,9 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const galleryImages = [
   {
-    src: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600&q=80",
-    alt: "Hands shaping clay",
+    src: "desert.jpg",
+    alt: "desert view",
     span: "md:col-span-2 md:row-span-2",
   },
   {
@@ -17,14 +18,14 @@ const galleryImages = [
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80",
+    src: "/mountain.jpg",
     alt: "Mountain landscape",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80",
-    alt: "Artisan at work",
-    span: "",
+    src: "/beach.jpg",
+    alt: "vacation view",
+    span: ""
   },
 ];
 

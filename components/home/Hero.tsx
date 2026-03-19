@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FormContainer from "../form/FormContainer";
+import Link from "next/link";
 
 export default function Hero() {
   const [loaded, setLoaded] = useState(false);
@@ -10,12 +10,6 @@ export default function Hero() {
     const t = setTimeout(() => setLoaded(true), 120);
     return () => clearTimeout(t);
   }, []);
-
-  export default function handleForm = () => {
-    return (
-      <FormContainer />
-    )
-  };
 
   return (
     <section className="relative min-h-screen flex flex-col justify-end overflow-visible">
@@ -47,7 +41,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Content — juno-container for centered layout */}
+      {/* Content — single juno-container for centered layout */}
       <div className="relative z-10 juno-container pb-20 md:pb-28 pt-16">
         {/* Top label */}
         <h2
@@ -94,14 +88,19 @@ export default function Hero() {
           A quiet circle of people who choose depth over noise, and making over
           scrolling.
         </p>
-      </div>
-      <div className="relative z-10 juno-container pb-20 md:pb-28 pt-16">
-        <button
-          onClick={handleForm}
+
+        {/* CTA — navigates to /invite */}
+        <Link
+          href="/invite"
           className="invite-button font-bold text-xs tracking-[0.22em] uppercase px-9 py-4 text-center"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.7s ease",
+            transitionDelay: "600ms",
+          }}
         >
           Request Invite →
-        </button>
+        </Link>
       </div>
 
       {/* Scroll indicator */}
@@ -120,6 +119,7 @@ export default function Hero() {
           style={{ backgroundColor: "var(--sand)" }}
         />
       </div>
+
     </section>
   );
 }

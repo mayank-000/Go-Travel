@@ -1,29 +1,34 @@
-import Input from "./Input";
 import Choice from "./Choice";
+import { type Question as QuestionItem } from "@/lib/questions";
 
-export default function Question({
-    question,
-    value,
-    onAnswer
-}: any) {
-    return (
-        <div className="">
-            <h2 className="">{question.label}</h2>
+interface QuestionProps {
+  question: QuestionItem;
+  value: string | undefined;
+  onAnswer: (key: string, value: string) => void;
+}
 
-            {question.type === "text" && (
-                <input 
-                    value={value}
-                    onChange={(v) => onAnswer(question.key, v)}
-                />
-            )}
+export default function Question({ question, value, onAnswer }: QuestionProps) {
+  return (
+    <div className="mt-6">
+      <h2 className="text-lg font-medium">{question.label}</h2>
 
-            {question.type === "choice" && (
-                <Choice
-                    options={question.options}
-                    value={value}
-                    onSelect={(v: string) => onAnswer(question.key, v)}
-                />
-            )}
-        </div>
-    )
+      {question.type === "text" && (
+        <input
+          type="text"
+          value={value || ""}
+          onChange={(e) => onAnswer(question.key, e.target.value)}
+          className="mt-3 w-full border-b border-gray-400 bg-transparent outline-none py-2 text-base"
+          placeholder={question.placeholder}
+        />
+      )}
+
+      {question.type === "choice" && question.options && (
+        <Choice
+          options={question.options}
+          value={value}
+          onSelect={(v: string) => onAnswer(question.key, v)}
+        />
+      )}
+    </div>
+  );
 }
