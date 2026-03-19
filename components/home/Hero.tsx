@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 export default function Hero() {
   const [loaded, setLoaded] = useState(false);
@@ -12,25 +11,31 @@ export default function Hero() {
   }, []);
 
   return (
-    /*
-      overflow-visible is REQUIRED — the button sits at bottom:0,
-      translateY(50%) so half of it pokes into the next section.
-      overflow:hidden would clip it away entirely.
-      Extra padding-bottom gives the button enough room so it
-      doesn't overlap the hero text on small screens.
-    */
     <section
-      className="relative flex flex-col justify-end"
-      style={{ minHeight: "100svh", overflow: "visible", paddingBottom: "3rem" }}
+      className="hero-section relative flex flex-col justify-end"
+      style={{
+        minHeight: "65svh",   /* mobile: shorter so content below is visible */
+        overflow:  "hidden",  /* no straddling button any more, can be hidden */
+      }}
     >
-      {/* Cinematic background */}
+      <style>{`
+        @media (min-width: 768px) {
+          .hero-section { min-height: 100svh !important; }
+          .hero-bg      { background-position: center center !important; }
+        }
+      `}</style>
+
+      {/* ── Cinematic background
+          Mobile: anchor to top so subject stays in frame on portrait screens
+          Desktop (md+): restore original center positioning via inline style  */}
       <div
+        className="hero-bg"
         style={{
           position:           "absolute",
           inset:              0,
           backgroundImage:    "url('/coverP5.png')",
           backgroundSize:     "cover",
-          backgroundPosition: "center center",
+          backgroundPosition: "center top",
           backgroundRepeat:   "no-repeat",
           transform:          loaded ? "scale(1.04)" : "scale(1.13)",
           transition:         "transform 9000ms ease-out",
@@ -39,17 +44,17 @@ export default function Hero() {
         }}
       />
 
-      {/* Gradient */}
+      {/* Gradient overlay */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to top, rgba(27,59,87,0.94) 0%, rgba(27,59,87,0.50) 40%, rgba(27,59,87,0.10) 75%, transparent 100%)",
+            "linear-gradient(to top, rgba(27,59,87,0.96) 0%, rgba(27,59,87,0.55) 38%, rgba(27,59,87,0.10) 72%, transparent 100%)",
           zIndex: 1,
         }}
       />
 
-      {/* SVG grain */}
+      {/* SVG grain texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -61,9 +66,12 @@ export default function Hero() {
       />
 
       {/* Text content */}
-      <div className="relative juno-container pb-16 md:pb-20 pt-16" style={{ zIndex: 3 }}>
+      <div
+        className="relative juno-container pt-24 pb-10 md:pb-20"
+        style={{ zIndex: 3 }}
+      >
         <h2
-          className="font-heading text-[13px] tracking-[0.38em] uppercase mb-7 transition-all duration-700"
+          className="font-heading text-[11px] sm:text-[13px] tracking-[0.38em] uppercase mb-5 sm:mb-7 transition-all duration-700"
           style={{
             color:           "var(--sand)",
             opacity:         loaded ? 1 : 0,
@@ -75,9 +83,9 @@ export default function Hero() {
         </h2>
 
         <h1
-          className="font-serif italic leading-[1.02] mb-7 transition-all duration-700"
+          className="font-serif italic leading-[1.02] mb-5 sm:mb-7 transition-all duration-700"
           style={{
-            fontSize:        "clamp(3.2rem, 7.5vw, 7rem)",
+            fontSize:        "clamp(2.6rem, 7.5vw, 7rem)",
             color:           "var(--cream)",
             maxWidth:        "780px",
             opacity:         loaded ? 1 : 0,
@@ -91,7 +99,7 @@ export default function Hero() {
         </h1>
 
         <p
-          className="font-heading text-base md:text-lg leading-relaxed transition-all duration-700"
+          className="font-heading text-sm md:text-lg leading-relaxed transition-all duration-700"
           style={{
             color:           "rgba(252,250,233,0.85)",
             fontWeight:      300,
@@ -106,22 +114,7 @@ export default function Hero() {
         </p>
       </div>
 
-      {/* ── Straddling button ──
-          position:absolute bottom:0 + translateY(50%) in CSS
-          makes it sit exactly on the seam between sections.     */}
-      <Link
-        href="/invite"
-        className="invite-button"
-        style={{
-          opacity:         loaded ? 1 : 0,
-          transition:      "opacity 0.7s ease, background-color 0.25s ease",
-          transitionDelay: loaded ? "600ms" : "0ms",
-        }}
-      >
-        Request Invite →
-      </Link>
-
-      {/* Scroll indicator */}
+      {/* Scroll indicator — desktop only */}
       <div
         className="absolute bottom-10 right-10 hidden md:flex flex-col items-center gap-3 transition-all duration-700"
         style={{ opacity: loaded ? 0.45 : 0, transitionDelay: "900ms", zIndex: 3 }}

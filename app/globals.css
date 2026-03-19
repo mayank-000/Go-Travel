@@ -114,33 +114,3 @@ main {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(42, 77, 106, 0.12);
 }
-
-/* ── Invite button ──
-   Sits absolutely at the bottom of the Hero, translated 50% down
-   so it straddles the Hero / next-section boundary.
-   Hero section must be overflow:visible for this to show.        */
-.invite-button {
-  position:        absolute;
-  bottom:          0;
-  left:            20%;
-  transform:       translateX(-50%) translateY(50%);
-
-  display:         inline-block;
-  font: 900;
-  white-space:     nowrap;
-  background:      var(--ochre);
-  color:           var(--navy);
-  font-family:     var(--font-sora), sans-serif;
-  font-weight:     700;
-  letter-spacing:  0.22em;
-  text-transform:  uppercase;
-  text-decoration: none;
-  padding:         0.1rem 0.5rem;
-  border:          none;
-  cursor:          pointer;
-  z-index:         10;
-  transition:      background-color 0.25s ease;
-}
-.invite-button:hover {
-  background: var(--sand);
-}
