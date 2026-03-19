@@ -1,31 +1,35 @@
 import Link from "next/link";
-import Image from "next/image";
 
 const galleryImages = [
   {
-    src: "desert.jpg",
-    alt: "desert view",
+    // ✅ LOCAL — wide desert hero, double-size slot
+    src: "/desertP2.jpg",
+    alt: "Desert landscape",
     span: "md:col-span-2 md:row-span-2",
   },
   {
-    src: "https://images.unsplash.com/photo-1493770348161-369560ae357d?w=600&q=80",
-    alt: "Culinary craft",
+    // ✅ LOCAL — trekking / adventure, replaces old Unsplash food shot
+    src: "/trekkingWibeP4.jpg",
+    alt: "Trekking adventure",
     span: "",
   },
   {
-    src: "https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=600&q=80",
-    alt: "Ocean surfing",
-    span: "",
-  },
-  {
-    src: "/mountain.jpg",
+    // ✅ LOCAL — mountain landscape
+    src: "/mountainP1.jpg",
     alt: "Mountain landscape",
     span: "",
   },
   {
-    src: "/beach.jpg",
-    alt: "vacation view",
-    span: ""
+    // Unsplash — open fire cooking (no local equivalent)
+    src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=600&q=80",
+    alt: "Open fire cooking",
+    span: "",
+  },
+  {
+    // ✅ LOCAL — beach / coast
+    src: "/beachP3.jpg",
+    alt: "Beach view",
+    span: "",
   },
 ];
 
@@ -40,11 +44,7 @@ export default function GalleryTeaser() {
       >
         <h2
           className="font-serif italic"
-          style={{
-            fontSize: "clamp(2rem, 4vw, 3.2rem)",
-            color: "var(--navy)",
-            lineHeight: 1.25,
-          }}
+          style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "var(--navy)", lineHeight: 1.25 }}
         >
           You have been everywhere.
           <br />
@@ -55,7 +55,6 @@ export default function GalleryTeaser() {
 
       {/* Gallery section */}
       <div className="juno-container pt-10 md:pt-14">
-
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div>
             <span
@@ -84,10 +83,7 @@ export default function GalleryTeaser() {
         {/* Image grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-[380px] md:h-[480px]">
           {galleryImages.map((img, i) => (
-            <div
-              key={i}
-              className={`relative overflow-hidden group ${img.span}`}
-            >
+            <div key={i} className={`relative overflow-hidden group ${img.span}`}>
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                 style={{ backgroundImage: `url('${img.src}')` }}

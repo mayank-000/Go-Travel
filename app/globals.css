@@ -11,14 +11,13 @@
   --background: var(--cream);
   --foreground: var(--charcoal);
 
-  /* Section & layout */
-  --section-padding-y: 3.5rem;
+  --section-padding-y:    3.5rem;
   --section-padding-y-md: 5rem;
-  --card-radius: 0.75rem;
-  --card-padding: 2rem;
-  --card-padding-md: 2.5rem;
-  --border-subtle: rgba(42, 77, 106, 0.12);
-  --border-accent: rgba(201, 139, 45, 0.35);
+  --card-radius:          0.75rem;
+  --card-padding:         2rem;
+  --card-padding-md:      2.5rem;
+  --border-subtle:        rgba(42, 77, 106, 0.12);
+  --border-accent:        rgba(201, 139, 45, 0.35);
 }
 
 @theme inline {
@@ -59,14 +58,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.font-heading {
-  font-family: var(--font-sora), sans-serif;
-}
-.font-serif {
-  font-family: var(--font-dm-serif), serif;
-}
+.font-heading { font-family: var(--font-sora), sans-serif; }
+.font-serif   { font-family: var(--font-dm-serif), serif; }
 
-/* Shared section container */
 .juno-container {
   width: 100%;
   max-width: 1200px;
@@ -76,25 +70,14 @@ body {
   padding-right: 1.5rem;
 }
 @media (min-width: 640px) {
-  .juno-container {
-    padding-left: 2.5rem;
-    padding-right: 2.5rem;
-  }
+  .juno-container { padding-left: 2.5rem; padding-right: 2.5rem; }
 }
 @media (min-width: 1024px) {
-  .juno-container {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
+  .juno-container { padding-left: 3rem; padding-right: 3rem; }
 }
 
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 .juno-section {
   padding-top: var(--section-padding-y);
@@ -107,16 +90,9 @@ body {
   }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-img {
-  max-width: 100%;
-  display: block;
-}
+a   { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
 
-/* ── Page fade-in ── */
 main {
   width: 100%;
   animation: fadeIn 0.45s ease-out both;
@@ -126,47 +102,45 @@ main {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Scroll-driven section disappear effect ──
-   Each section sits in normal flow but fades + scales down as you
-   scroll past it, giving the feeling that previous content "peels away". */
 .juno-section-scroll {
   position: relative;
   z-index: 0;
   will-change: transform, opacity;
-  transition: none; /* handled in JS via IntersectionObserver */
+  transition: none;
 }
 
-/* ── Section reveal (used by components) ── */
-[data-reveal] {
-  /* initial state set inline in the component */
-}
-
-/* ── Hover lift utility ── */
-.hover-lift {
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
+.hover-lift { transition: transform 0.35s ease, box-shadow 0.35s ease; }
 .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(42, 77, 106, 0.12);
 }
 
-.invite-button{
-  position: absolute;
-  left: 25px;
-  bottom: -32px;
+/* ── Invite button ──
+   Sits absolutely at the bottom of the Hero, translated 50% down
+   so it straddles the Hero / next-section boundary.
+   Hero section must be overflow:visible for this to show.        */
+.invite-button {
+  position:        absolute;
+  bottom:          0;
+  left:            20%;
+  transform:       translateX(-50%) translateY(50%);
 
-  background: var(--ochre);
-  color: var(--navy);
-
-  border: 2px solid black;
-  padding: 5px 8px;
-
-  z-index: 100;
+  display:         inline-block;
+  font: 900;
+  white-space:     nowrap;
+  background:      var(--ochre);
+  color:           var(--navy);
+  font-family:     var(--font-sora), sans-serif;
+  font-weight:     700;
+  letter-spacing:  0.22em;
+  text-transform:  uppercase;
+  text-decoration: none;
+  padding:         0.1rem 0.5rem;
+  border:          none;
+  cursor:          pointer;
+  z-index:         10;
+  transition:      background-color 0.25s ease;
 }
-
-/* laptop */
-@media (min-width: 1024px){
-  .invite-button{
-    left: 50px;
-  }
+.invite-button:hover {
+  background: var(--sand);
 }
