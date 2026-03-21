@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: "var(--deep)",
+        backgroundColor: "var(--navy)",
         borderTop:       "1px solid rgba(201,160,90,0.1)",
       }}
     >
@@ -17,7 +17,7 @@ export default function Footer() {
             <div>
               <span
                 className="font-serif italic block"
-                style={{ fontSize: "2rem", color: "var(--text-primary)" }}
+                style={{ fontSize: "2rem", color: "var(--gold)" }}
               >
                 JUNO
               </span>
@@ -38,7 +38,7 @@ export default function Footer() {
               style={{
                 fontSize:   "0.875rem",
                 fontWeight: 300,
-                color:      "var(--text-muted)",
+                color:      "var(--gold-light)",
                 maxWidth:   "260px",
                 lineHeight: 1.8,
               }}
@@ -48,7 +48,7 @@ export default function Footer() {
             </p>
             <p
               className="font-heading"
-              style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+              style={{ fontSize: "0.8rem", color: "var(--clay)" }}
             >
               hello@junojourneys.in
             </p>
@@ -62,7 +62,7 @@ export default function Footer() {
                 fontSize:      "9px",
                 letterSpacing: "0.35em",
                 textTransform: "uppercase",
-                color:         "var(--sage)",
+                color:         "var(--surface)",
               }}
             >
               Explore
@@ -79,12 +79,12 @@ export default function Footer() {
                 key={href}
                 href={href}
                 className="font-heading w-fit transition-all duration-300"
-                style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}
+                style={{ fontSize: "0.875rem", color: "var(--clay)" }}
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.color = "var(--gold)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                  (e.currentTarget as HTMLElement).style.color = "var(--clay)";
                 }}
               >
                 {label}
@@ -100,7 +100,7 @@ export default function Footer() {
                 fontSize:      "9px",
                 letterSpacing: "0.35em",
                 textTransform: "uppercase",
-                color:         "var(--sage)",
+                color:         "var(--surface)",
               }}
             >
               Join Us
@@ -110,7 +110,7 @@ export default function Footer() {
               style={{
                 fontSize:   "0.875rem",
                 fontWeight: 300,
-                color:      "var(--text-muted)",
+                color:      "var(--gold)",
                 lineHeight: 1.8,
               }}
             >
@@ -142,7 +142,7 @@ export default function Footer() {
             </Link>
             <p
               className="font-heading"
-              style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+              style={{ fontSize: "0.8rem", color: "var(--gold-light)" }}
             >
               @junojourneys
             </p>
@@ -157,7 +157,7 @@ export default function Footer() {
         >
           <p
             className="font-heading"
-            style={{ fontSize: "0.75rem", color: "var(--text-muted)", opacity: 0.6 }}
+            style={{ fontSize: "0.75rem", color: "var(--gold-light)", opacity: 0.6 }}
           >
             © {new Date().getFullYear()} JUNO Journeys. All rights reserved.
           </p>
@@ -167,7 +167,7 @@ export default function Footer() {
               fontSize:      "9px",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color:         "var(--text-muted)",
+              color:         "var(--clay)",
               opacity:       0.4,
             }}
           >
