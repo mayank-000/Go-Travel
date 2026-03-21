@@ -3,16 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-/* ────────────────────────────────────────────────────────────
-   GalleryTeaser — Magnetic Floating Cards
-   
-   A completely different approach:
-   - Cards float in 3D space with parallax depth
-   - Magnetic hover effects pull cards toward cursor
-   - Dramatic sequential reveals with blur & scale
-   - Ambient lighting that follows mouse
-──────────────────────────────────────────────────────────── */
-
 const images = [
   { src: "/desertP2.jpg",       alt: "Salt flats at dawn",      label: "Kutch, Gujarat" },
   { src: "/trekkingWibeP4.jpg", alt: "High Atlas trails",       label: "Morocco" },
@@ -46,7 +36,6 @@ export default function GalleryTeaser() {
   const lightRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Mouse parallax effect
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!sectionRef.current) return;
@@ -55,7 +44,6 @@ export default function GalleryTeaser() {
       const y = (e.clientY - rect.top) / rect.height;
       setMousePos({ x, y });
 
-      // Move ambient light
       if (lightRef.current) {
         lightRef.current.style.left = `${e.clientX}px`;
         lightRef.current.style.top = `${e.clientY}px`;
@@ -66,7 +54,6 @@ export default function GalleryTeaser() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // GSAP scroll animation
   useEffect(() => {
     const run = async () => {
       const { gsap } = await import("gsap");
@@ -76,13 +63,9 @@ export default function GalleryTeaser() {
       const cards = cardsRef.current?.querySelectorAll(".gallery-card");
       if (!cards?.length) return;
 
-      // Title reveal
       gsap.fromTo(
         ".gallery-title",
-        {
-          y: 100,
-          opacity: 0,
-        },
+        { y: 100, opacity: 0 },
         {
           y: 0,
           opacity: 1,
@@ -95,16 +78,9 @@ export default function GalleryTeaser() {
         }
       );
 
-      // Cards cascade in with dramatic effect
       gsap.fromTo(
         cards,
-        {
-          y: 200,
-          opacity: 0,
-          scale: 0.6,
-          rotateX: 45,
-          filter: "blur(20px)",
-        },
+        { y: 200, opacity: 0, scale: 0.6, rotateX: 45, filter: "blur(20px)" },
         {
           y: 0,
           opacity: 1,
@@ -135,7 +111,6 @@ export default function GalleryTeaser() {
         perspective: "2000px",
       }}
     >
-      {/* Ambient light that follows cursor */}
       <div
         ref={lightRef}
         className="fixed pointer-events-none"
@@ -151,7 +126,6 @@ export default function GalleryTeaser() {
       />
 
       <div className="juno-container relative" style={{ zIndex: 2 }}>
-        {/* Title Section */}
         <div className="text-center mb-12 gallery-title">
           <span
             className="font-heading block mb-4"
@@ -185,7 +159,8 @@ export default function GalleryTeaser() {
             className="font-heading mx-auto"
             style={{
               fontSize: "clamp(1rem,1.4vw,1.1rem)",
-              color: "var(--text-secondary)",
+              color: "var(--charcoal)",
+              opacity: 0.75,
               maxWidth: "500px",
               lineHeight: 1.7,
               fontWeight: 300,
@@ -195,7 +170,6 @@ export default function GalleryTeaser() {
           </p>
         </div>
 
-        {/* Floating Cards Grid */}
         <div
           ref={cardsRef}
           className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
@@ -214,70 +188,88 @@ export default function GalleryTeaser() {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* FIXED CTA - proper color contrast */}
         <div className="text-center" style={{ marginTop: "clamp(4rem,8vw,6rem)" }}>
           <Link
             href="/gallery"
-            className="font-heading inline-flex items-center gap-3 group"
+            className="font-heading inline-flex items-center gap-3 group relative overflow-hidden gallery-cta-button"
             style={{
               fontSize: "clamp(10px,1.1vw,11px)",
               letterSpacing: "0.35em",
               textTransform: "uppercase",
-              color: "var(--ochre)",
+              color: "var(--cream)",
               fontWeight: 600,
-              padding: "1.2rem 2.8rem",
+              padding: "1.3rem 3.2rem",
               border: "2px solid var(--ochre)",
-              position: "relative",
-              overflow: "hidden",
+              background: "var(--ochre)",
               transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              boxShadow: "0 8px 32px rgba(139,101,63,0.3)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--cream)";
-              (e.currentTarget as HTMLElement).style.borderColor = "var(--ochre-dark)";
+              const target = e.currentTarget as HTMLElement;
+              target.style.transform = "translateY(-4px) scale(1.03)";
+              target.style.boxShadow = "0 16px 48px rgba(139,101,63,0.4)";
+              target.style.background = "var(--ochre-dark)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--ochre)";
-              (e.currentTarget as HTMLElement).style.borderColor = "var(--ochre)";
+              const target = e.currentTarget as HTMLElement;
+              target.style.transform = "translateY(0) scale(1)";
+              target.style.boxShadow = "0 8px 32px rgba(139,101,63,0.3)";
+              target.style.background = "var(--ochre)";
             }}
           >
-            <span
-              className="absolute inset-0 bg-gradient-to-r from-ochre to-ochre-dark"
-              style={{
-                transform: "translateX(-100%)",
-                transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-                zIndex: -1,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.transform = "translateX(0)";
-              }}
-            />
-            <span style={{ position: "relative", zIndex: 1 }}>Explore Gallery</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              style={{
-                transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
-              }}
-              className="group-hover:translate-x-1"
-            >
-              <path
-                d="M1 8h14M9 2l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <>
+              <span className="cta-text">Explore Gallery</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="group-hover:translate-x-1 transition-transform duration-300 cta-arrow"
+              >
+                <path
+                  d="M1 8h14M9 2l6 6-6 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              
+              <div className="cta-shine" />
+            </>
           </Link>
         </div>
       </div>
+
+      <style jsx>{`
+        .cta-text {
+          position: relative;
+          z-index: 1;
+        }
+
+        .cta-arrow {
+          position: relative;
+          z-index: 1;
+        }
+
+        .cta-shine {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+          transform: translateX(-100%);
+          animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+      `}</style>
     </section>
   );
 }
 
-/* ── Floating Card Component ── */
 function FloatingCard({
   image,
   index,
@@ -290,15 +282,13 @@ function FloatingCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Parallax depth based on mouse position
   useEffect(() => {
     if (!cardRef.current) return;
     
-    // Disable parallax on mobile/touch devices
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (isTouchDevice) return;
     
-    const depth = (index % 3) + 1; // Different depth layers
+    const depth = (index % 3) + 1;
     const moveX = (mousePos.x - 0.5) * depth * 20;
     const moveY = (mousePos.y - 0.5) * depth * 15;
 
@@ -335,7 +325,6 @@ function FloatingCard({
           transition: "box-shadow 0.6s cubic-bezier(0.16,1,0.3,1)",
         }}
       >
-        {/* Image */}
         <div
           style={{
             position: "absolute",
@@ -348,7 +337,6 @@ function FloatingCard({
           }}
         />
 
-        {/* Gradient overlay */}
         <div
           style={{
             position: "absolute",
@@ -358,7 +346,6 @@ function FloatingCard({
           }}
         />
 
-        {/* Label */}
         <div
           className="absolute bottom-0 left-0 right-0"
           style={{
@@ -384,7 +371,6 @@ function FloatingCard({
           </span>
         </div>
 
-        {/* Shine effect on hover */}
         <div
           style={{
             position: "absolute",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const testimonials = [
   {
@@ -28,6 +28,8 @@ const testimonials = [
 
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const els = sectionRef.current?.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -47,23 +49,41 @@ export default function Testimonials() {
     return () => obs.disconnect();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / window.innerHeight));
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section
       ref={sectionRef}
       className="juno-section relative overflow-hidden"
       style={{
-        backgroundColor: "var(--panel)",
+        backgroundColor: "var(--surface)",
         paddingTop:      "clamp(5rem,10vw,8rem)",
         paddingBottom:   "clamp(5rem,10vw,8rem)",
       }}
     >
-      {/* Background ambient glow */}
+      {/* Background ambient glow - scroll reactive */}
       <div
         className="absolute pointer-events-none"
         style={{
-          top: 0, left: "50%", transform: "translateX(-50%)",
-          width: "80vw", height: "60vh",
-          background: "radial-gradient(ellipse, rgba(201,160,90,0.04) 0%, transparent 65%)",
+          top: `${-10 + scrollProgress * 20}%`, 
+          left: "50%", 
+          transform: "translateX(-50%)",
+          width: "80vw", 
+          height: "60vh",
+          background: "radial-gradient(ellipse, rgba(201,160,90,0.08) 0%, transparent 65%)",
+          opacity: scrollProgress,
+          transition: "top 0.3s ease, opacity 0.3s ease",
         }}
       />
 
@@ -80,7 +100,8 @@ export default function Testimonials() {
               fontSize:      "9px",
               letterSpacing: "0.4em",
               textTransform: "uppercase",
-              color:         "var(--sage)",
+              color:         "var(--ochre)",
+              fontWeight:    600,
             }}
           >
             Traveler Testimonials
@@ -89,7 +110,7 @@ export default function Testimonials() {
             className="font-serif italic"
             style={{
               fontSize: "clamp(2rem,3.8vw,3.2rem)",
-              color:    "var(--text-primary)",
+              color:    "var(--charcoal)",
             }}
           >
             Their words say what ours cannot.
@@ -97,9 +118,10 @@ export default function Testimonials() {
           <p
             className="font-heading mx-auto mt-4"
             style={{
-              fontSize:   "0.875rem",
+              fontSize:   "clamp(0.9rem,1.3vw,1rem)",
               fontWeight: 300,
-              color:      "var(--text-muted)",
+              color:      "var(--charcoal)",
+              opacity:    0.65,
               maxWidth:   "480px",
               lineHeight: 1.8,
             }}
@@ -118,53 +140,53 @@ export default function Testimonials() {
               className="flex flex-col group relative overflow-hidden"
               style={{
                 padding:        "clamp(2rem,3vw,2.5rem) clamp(1.5rem,2.5vw,2rem)",
-                border:         "1px solid rgba(201,160,90,0.12)",
-                background:     "rgba(255,255,255,0.025)",
+                border:         "1.5px solid rgba(139,101,63,0.15)",
+                background:     "var(--cream)",
                 transitionDelay: `${i * 0.1}s`,
-                transition:     `opacity 0.9s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s, transform 0.9s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s, background 0.4s ease`,
+                transition:     `all 0.6s cubic-bezier(0.16,1,0.3,1)`,
                 cursor:         "default",
+                transform:      hoveredIndex === i ? "translateY(-8px) scale(1.02)" : "translateY(0) scale(1)",
+                boxShadow:      hoveredIndex === i ? "0 30px 80px rgba(139,101,63,0.15)" : "0 10px 30px rgba(139,101,63,0.06)",
               }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "rgba(201,160,90,0.06)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,160,90,0.3)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.025)";
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,160,90,0.12)";
-              }}
+              onMouseEnter={() => setHoveredIndex(i)}
+              onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Hover glow */}
               <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 pointer-events-none"
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                  background: "radial-gradient(circle at 50% 0%, rgba(201,160,90,0.05) 0%, transparent 70%)",
+                  background: "radial-gradient(circle at 50% 0%, rgba(201,160,90,0.08) 0%, transparent 70%)",
+                  opacity:    hoveredIndex === i ? 1 : 0,
                   transition: "opacity 0.5s ease",
                 }}
               />
 
               {/* Quote mark */}
               <span
-                className="font-serif"
+                className="font-serif relative z-10"
                 style={{
                   fontSize:   "3.5rem",
                   lineHeight: 0.8,
-                  color:      "var(--gold)",
-                  opacity:    0.35,
+                  color:      "var(--ochre)",
+                  opacity:    0.4,
                   display:    "block",
                   marginBottom: "1.25rem",
+                  transform:  hoveredIndex === i ? "scale(1.1)" : "scale(1)",
+                  transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
                 }}
               >
-                `&quot;`
+                &quot;
               </span>
 
               {/* Quote */}
               <p
-                className="font-heading flex-1"
+                className="font-heading flex-1 relative z-10"
                 style={{
-                  fontSize:      "clamp(0.875rem,1.2vw,0.95rem)",
+                  fontSize:      "clamp(0.95rem,1.2vw,1rem)",
                   lineHeight:    1.85,
                   fontWeight:    300,
-                  color:         "rgba(240,236,228,0.82)",
+                  color:         "var(--charcoal)",
+                  opacity:       0.85,
                   marginBottom:  "2rem",
                 }}
               >
@@ -173,31 +195,37 @@ export default function Testimonials() {
 
               {/* Divider */}
               <div
-                className="w-10 h-px mb-5"
-                style={{ backgroundColor: "rgba(201,160,90,0.25)" }}
+                className="h-px mb-5 relative z-10"
+                style={{ 
+                  backgroundColor: "rgba(139,101,63,0.25)",
+                  width: hoveredIndex === i ? "60px" : "40px",
+                  transition: "width 0.4s ease",
+                }}
               />
 
               {/* Attribution */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 relative z-10">
                 <div
                   style={{
-                    width:              "44px",
-                    height:             "44px",
+                    width:              "48px",
+                    height:             "48px",
                     borderRadius:       "50%",
                     backgroundImage:    `url('${t.image}')`,
                     backgroundSize:     "cover",
                     backgroundPosition: "center",
-                    border:             "1px solid rgba(201,160,90,0.2)",
+                    border:             "2px solid rgba(139,101,63,0.2)",
                     flexShrink:         0,
+                    transform:          hoveredIndex === i ? "scale(1.05)" : "scale(1)",
+                    transition:         "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
                   }}
                 />
                 <div>
                   <p
                     className="font-heading"
                     style={{
-                      fontSize:   "0.875rem",
-                      fontWeight: 500,
-                      color:      "var(--text-primary)",
+                      fontSize:   "0.95rem",
+                      fontWeight: 600,
+                      color:      "var(--charcoal)",
                     }}
                   >
                     {t.name}
@@ -205,8 +233,9 @@ export default function Testimonials() {
                   <p
                     className="font-heading"
                     style={{
-                      fontSize:   "0.75rem",
-                      color:      "var(--text-muted)",
+                      fontSize:   "0.8rem",
+                      color:      "var(--charcoal)",
+                      opacity:    0.5,
                       marginTop:  "2px",
                     }}
                   >
@@ -216,6 +245,16 @@ export default function Testimonials() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Bottom decorative */}
+        <div 
+          className="flex items-center justify-center gap-4 mt-16 opacity-25"
+          data-reveal
+        >
+          <div className="w-12 h-px bg-ochre" />
+          <span className="font-serif text-ochre text-xl">✦</span>
+          <div className="w-12 h-px bg-ochre" />
         </div>
 
       </div>

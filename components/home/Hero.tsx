@@ -3,12 +3,6 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 
-/* ─────────────────────────────────────────────────────
-   JUNO Hero — Cinematic, Framer-level entrance
-   Dependencies needed:
-     npm install gsap @studio-freight/lenis
-─────────────────────────────────────────────────────── */
-
 export default function Hero() {
   const sectionRef  = useRef<HTMLElement>(null);
   const bgRef       = useRef<HTMLDivElement>(null);
@@ -32,25 +26,21 @@ export default function Hero() {
 
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      /* ─ Background zoom in from oversized ─ */
       if (bgRef.current) {
         gsap.set(bgRef.current, { scale: 1.15 });
         tl.to(bgRef.current, { scale: 1.04, duration: 2.4, ease: "power2.out" }, 0);
       }
 
-      /* ─ Overlay fade down ─ */
       if (overlayRef.current) {
         gsap.set(overlayRef.current, { opacity: 0 });
         tl.to(overlayRef.current, { opacity: 1, duration: 1.8 }, 0.2);
       }
 
-      /* ─ Tag line slide up ─ */
       if (tagRef.current) {
         gsap.set(tagRef.current, { y: 20, opacity: 0 });
         tl.to(tagRef.current, { y: 0, opacity: 1, duration: 1 }, 0.6);
       }
 
-      /* ─ Headline word-by-word ─ */
       if (headlineRef.current) {
         const lines = headlineRef.current.querySelectorAll(".hero-line");
         gsap.set(lines, { y: "110%", opacity: 0 });
@@ -63,25 +53,21 @@ export default function Hero() {
         }, 0.75);
       }
 
-      /* ─ Sub text ─ */
       if (subRef.current) {
         gsap.set(subRef.current, { y: 24, opacity: 0 });
         tl.to(subRef.current, { y: 0, opacity: 1, duration: 1 }, 1.1);
       }
 
-      /* ─ CTA buttons ─ */
       if (ctaRef.current) {
         gsap.set(ctaRef.current, { y: 20, opacity: 0 });
         tl.to(ctaRef.current, { y: 0, opacity: 1, duration: 0.9 }, 1.3);
       }
 
-      /* ─ Scroll indicator ─ */
       if (scrollRef.current) {
         gsap.set(scrollRef.current, { opacity: 0 });
         tl.to(scrollRef.current, { opacity: 0.4, duration: 0.8, delay: 0.4 }, 1.6);
       }
 
-      /* ─ Parallax on scroll ─ */
       if (bgRef.current) {
         (ScrollTrigger as { create: (opts: Record<string, unknown>) => void }).create({
           trigger: sectionRef.current,
@@ -99,7 +85,6 @@ export default function Hero() {
 
     run();
 
-    /* ─ Cursor tracking for magnetic text ─ */
     const onMove = (e: MouseEvent) => {
       const el = document.getElementById("juno-cursor");
       if (el) {
@@ -117,21 +102,19 @@ export default function Hero() {
       className="relative flex flex-col justify-end overflow-hidden"
       style={{ minHeight: "100svh" }}
     >
-      {/* ── Cinematic background ── */}
       <div
         ref={bgRef}
         style={{
-          position:           "absolute",
-          inset:              0,
-          backgroundImage:    "url('/coverP5.png')",
-          backgroundSize:     "cover",
+          position: "absolute",
+          inset: 0,
+          backgroundImage: "url('/coverP5.png')",
+          backgroundSize: "cover",
           backgroundPosition: "center center",
-          transformOrigin:    "center center",
-          zIndex:             0,
+          transformOrigin: "center center",
+          zIndex: 0,
         }}
       />
 
-      {/* ── Gradient overlay — rich dark vignette ── */}
       <div
         ref={overlayRef}
         className="absolute inset-0"
@@ -152,7 +135,6 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Film grain ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -161,7 +143,6 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Ambient glow — bottom left ── */}
       <div
         className="absolute pointer-events-none"
         style={{
@@ -172,12 +153,10 @@ export default function Hero() {
         }}
       />
 
-      {/* ── Text content ── */}
       <div
         className="relative juno-container pb-16 md:pb-28"
         style={{ zIndex: 3, paddingTop: "8rem" }}
       >
-        {/* Eyebrow */}
         <span
           ref={tagRef}
           className="font-heading block mb-7"
@@ -186,99 +165,149 @@ export default function Hero() {
             letterSpacing: "0.45em",
             textTransform: "uppercase",
             color: "var(--gold)",
+            fontWeight: 700,
+            textShadow: "0 2px 12px rgba(201,160,90,0.8), 0 0 30px rgba(201,160,90,0.4)",
+            animation: "glow 2s ease-in-out infinite",
           }}
         >
           India&apos;s First Invite-Only Experiential Journey Club
         </span>
 
-        {/* Main headline — line-by-line reveal */}
+        {/* DRAMATICALLY IMPROVED "EXPERIENCE" TEXT */}
         <h1
           ref={headlineRef}
           className="font-serif italic"
           style={{
-            fontSize:   "clamp(3.2rem, 9vw, 9rem)",
+            fontSize: "clamp(3.2rem, 9vw, 9rem)",
             lineHeight: 0.95,
-            color:      "var(--text-primary)",
-            maxWidth:   "850px",
+            maxWidth: "850px",
             marginBottom: "2rem",
           }}
         >
           <span className="line-reveal" style={{ display: "block", overflow: "hidden" }}>
-            <span className="hero-line" style={{ display: "block" }}>Experience</span>
+            <span 
+              className="hero-line" 
+              style={{ 
+                display: "block",
+                color: "#FFFFFF",
+                fontWeight: 600,
+                textShadow: `
+                  0 0 20px rgba(255,255,255,0.8),
+                  0 0 40px rgba(255,255,255,0.6),
+                  0 0 60px rgba(201,160,90,0.5),
+                  0 4px 20px rgba(0,0,0,0.8),
+                  0 8px 40px rgba(0,0,0,0.6)
+                `,
+                letterSpacing: "0.02em",
+              }}
+            >
+              Experience
+            </span>
           </span>
           <span className="line-reveal" style={{ display: "block", overflow: "hidden", marginTop: "0.08em" }}>
-            <span className="hero-line" style={{ display: "block", color: "var(--gold)" }}>
+            <span 
+              className="hero-line" 
+              style={{ 
+                display: "block", 
+                color: "var(--gold)",
+                fontWeight: 700,
+                textShadow: `
+                  0 0 30px rgba(201,160,90,1),
+                  0 0 60px rgba(201,160,90,0.8),
+                  0 0 90px rgba(201,160,90,0.6),
+                  0 4px 20px rgba(0,0,0,0.8)
+                `,
+                animation: "titleGlow 3s ease-in-out infinite",
+              }}
+            >
               JUNO.
             </span>
           </span>
         </h1>
 
-        {/* Sub */}
         <p
           ref={subRef}
           className="font-heading"
           style={{
-            fontSize:    "clamp(0.9rem, 1.6vw, 1.15rem)",
-            fontWeight:  300,
-            color:       "rgba(240,236,228,0.65)",
-            maxWidth:    "420px",
-            lineHeight:  1.75,
+            fontSize: "clamp(1rem, 1.6vw, 1.2rem)",
+            fontWeight: 400,
+            color: "#FFFFFF",
+            maxWidth: "420px",
+            lineHeight: 1.75,
             marginBottom: "2.5rem",
+            textShadow: "0 2px 12px rgba(0,0,0,0.8), 0 4px 24px rgba(0,0,0,0.6)",
           }}
         >
           A quiet circle of people who choose depth over noise,
           and making over scrolling.
         </p>
 
-        {/* CTA row */}
         <div ref={ctaRef} style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>
           <Link
             href="/invite"
-            className="font-heading"
+            className="font-heading group relative overflow-hidden"
             style={{
-              fontSize:        "clamp(9px,1vw,11px)",
-              letterSpacing:   "0.25em",
-              textTransform:   "uppercase",
-              padding:         "1rem 2.5rem",
-              background:      "var(--gold)",
-              color:           "#080808",
-              fontWeight:      600,
-              display:         "inline-flex",
-              alignItems:      "center",
-              gap:             "0.5rem",
-              transition:      "all 0.3s ease",
+              fontSize: "clamp(9px,1vw,11px)",
+              letterSpacing: "0.25em",
+              textTransform: "uppercase",
+              padding: "1.2rem 3rem",
+              background: "var(--gold)",
+              color: "#080808",
+              fontWeight: 700,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.75rem",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+              boxShadow: "0 8px 32px rgba(201,160,90,0.5), 0 0 40px rgba(201,160,90,0.3)",
             }}
             onMouseEnter={(e) => {
               (e.currentTarget as HTMLElement).style.background = "var(--gold-light)";
-              (e.currentTarget as HTMLElement).style.transform  = "translateY(-2px)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(-4px) scale(1.05)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(201,160,90,0.6), 0 0 60px rgba(201,160,90,0.5)";
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.background = "var(--gold)";
-              (e.currentTarget as HTMLElement).style.transform  = "translateY(0)";
+              (e.currentTarget as HTMLElement).style.transform = "translateY(0) scale(1)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 32px rgba(201,160,90,0.5), 0 0 40px rgba(201,160,90,0.3)";
             }}
           >
-            Request an Invitation →
+            <span className="relative z-10">Request an Invitation</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="relative z-10 group-hover:translate-x-2 transition-transform duration-300">
+              <path d="M1 8h14M9 2l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100"
+              style={{
+                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                transform: "translateX(-100%)",
+                transition: "all 0.8s ease",
+              }}
+            />
           </Link>
 
           <a
             href="#about"
             className="font-heading"
             style={{
-              fontSize:      "clamp(9px,1vw,11px)",
+              fontSize: "clamp(9px,1vw,11px)",
               letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color:         "rgba(240,236,228,0.5)",
-              borderBottom:  "1px solid rgba(240,236,228,0.2)",
-              paddingBottom: "2px",
-              transition:    "color 0.3s ease, border-color 0.3s ease",
+              color: "#FFFFFF",
+              borderBottom: "2px solid rgba(255,255,255,0.4)",
+              paddingBottom: "4px",
+              transition: "all 0.3s ease",
+              fontWeight: 600,
+              textShadow: "0 2px 8px rgba(0,0,0,0.6)",
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color       = "var(--gold)";
+              (e.currentTarget as HTMLElement).style.color = "var(--gold)";
               (e.currentTarget as HTMLElement).style.borderColor = "var(--gold)";
+              (e.currentTarget as HTMLElement).style.textShadow = "0 0 20px rgba(201,160,90,0.8)";
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color       = "rgba(240,236,228,0.5)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(240,236,228,0.2)";
+              (e.currentTarget as HTMLElement).style.color = "#FFFFFF";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.4)";
+              (e.currentTarget as HTMLElement).style.textShadow = "0 2px 8px rgba(0,0,0,0.6)";
             }}
           >
             Discover more ↓
@@ -286,7 +315,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── Scroll indicator — right side, vertical ── */}
       <div
         ref={scrollRef}
         className="absolute hidden md:flex flex-col items-center gap-3"
@@ -296,30 +324,30 @@ export default function Hero() {
           className="h-16 w-px"
           style={{
             background: "linear-gradient(to bottom, transparent, var(--gold))",
-            animation:  "scrollPulse 2s ease-in-out infinite",
+            animation: "scrollPulse 2s ease-in-out infinite",
           }}
         />
         <span
           className="font-heading"
           style={{
-            fontSize:    "8px",
+            fontSize: "8px",
             letterSpacing: "0.35em",
             textTransform: "uppercase",
-            color:       "var(--gold)",
+            color: "var(--gold)",
             writingMode: "vertical-rl",
+            textShadow: "0 0 10px rgba(201,160,90,0.6)",
           }}
         >
           Scroll
         </span>
       </div>
 
-      {/* ── Bottom border accent ── */}
       <div
         className="absolute bottom-0 left-0 right-0"
         style={{
-          height:     "1px",
+          height: "1px",
           background: "linear-gradient(to right, transparent, rgba(201,160,90,0.4), transparent)",
-          zIndex:     3,
+          zIndex: 3,
         }}
       />
 
@@ -327,6 +355,26 @@ export default function Hero() {
         @keyframes scrollPulse {
           0%, 100% { opacity: 0.4; transform: scaleY(1); }
           50%       { opacity: 0.9; transform: scaleY(1.15); }
+        }
+        @keyframes glow {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.8; }
+        }
+        @keyframes titleGlow {
+          0%, 100% { 
+            text-shadow: 
+              0 0 30px rgba(201,160,90,1),
+              0 0 60px rgba(201,160,90,0.8),
+              0 0 90px rgba(201,160,90,0.6),
+              0 4px 20px rgba(0,0,0,0.8);
+          }
+          50% { 
+            text-shadow: 
+              0 0 40px rgba(201,160,90,1),
+              0 0 80px rgba(201,160,90,0.9),
+              0 0 120px rgba(201,160,90,0.7),
+              0 4px 20px rgba(0,0,0,0.8);
+          }
         }
       `}</style>
     </section>

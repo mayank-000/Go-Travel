@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function NarrativeBlock() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
 
   useEffect(() => {
     const els = sectionRef.current?.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -23,17 +24,39 @@ export default function NarrativeBlock() {
     return () => obs.disconnect();
   }, []);
 
+  // Parallax effect for images
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+      setScrollOffset(scrollProgress * 50);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section
       ref={sectionRef}
-      className="juno-section overflow-hidden"
+      className="juno-section overflow-hidden relative"
       style={{ backgroundColor: "var(--surface)" }}
     >
       {/* Top border accent */}
-      <div style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(201,160,90,0.2), transparent)", marginBottom: "0" }} />
+      <div style={{ height: "1px", background: "linear-gradient(to right, transparent, rgba(201,160,90,0.25), transparent)", marginBottom: "0" }} />
 
-      <div className="juno-container">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
+      {/* Subtle animated background */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          background: `radial-gradient(ellipse at 70% 30%, rgba(201,160,90,0.04) 0%, transparent 50%)`,
+        }}
+      />
+
+      <div className="juno-container relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
           {/* ── Text ── */}
           <div
@@ -46,7 +69,8 @@ export default function NarrativeBlock() {
                 fontSize:      "9px",
                 letterSpacing: "0.4em",
                 textTransform: "uppercase",
-                color:         "var(--gold)",
+                color:         "var(--ochre)",
+                fontWeight:    600,
               }}
             >
               Who We Are
@@ -57,7 +81,7 @@ export default function NarrativeBlock() {
               style={{
                 fontSize:   "clamp(2.2rem, 4vw, 3.8rem)",
                 lineHeight: 1.06,
-                color:      "var(--text-primary)",
+                color:      "var(--charcoal)",
               }}
             >
               We are not a
@@ -65,15 +89,22 @@ export default function NarrativeBlock() {
               travel agency.
             </h2>
 
-            <div className="w-12 h-px" style={{ backgroundColor: "var(--gold)", opacity: 0.6 }} />
+            <div 
+              className="w-12 h-px" 
+              style={{ 
+                backgroundColor: "var(--ochre)", 
+                boxShadow: "0 0 10px rgba(201,160,90,0.3)",
+              }} 
+            />
 
             <p
               className="font-heading"
               style={{
-                fontSize:   "clamp(0.875rem,1.4vw,1rem)",
+                fontSize:   "clamp(0.95rem,1.4vw,1.05rem)",
                 fontWeight: 300,
-                color:      "var(--text-secondary)",
+                color:      "var(--charcoal)",
                 lineHeight: 1.8,
+                opacity:    0.8,
               }}
             >
               JUNO was born from a belief that modern life has severed us from
@@ -84,10 +115,11 @@ export default function NarrativeBlock() {
             <p
               className="font-heading"
               style={{
-                fontSize:   "clamp(0.875rem,1.4vw,1rem)",
+                fontSize:   "clamp(0.95rem,1.4vw,1.05rem)",
                 fontWeight: 300,
-                color:      "var(--text-secondary)",
+                color:      "var(--charcoal)",
                 lineHeight: 1.8,
+                opacity:    0.8,
               }}
             >
               We curate small-group journeys that place culture, craft, and
@@ -100,21 +132,33 @@ export default function NarrativeBlock() {
                 "8 people maximum per journey",
                 "Embedded with local artisans and communities",
                 "No tourist infrastructure — only lived experience",
-              ].map((point) => (
-                <div key={point} className="flex items-start gap-4">
+              ].map((point, idx) => (
+                <div 
+                  key={point} 
+                  className="flex items-start gap-4 group"
+                  style={{
+                    transform: "translateX(0)",
+                    transition: "transform 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "translateX(4px)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "translateX(0)")}
+                >
                   <span
                     style={{
-                      width:           "18px",
-                      height:          "18px",
+                      width:           "20px",
+                      height:          "20px",
                       borderRadius:    "50%",
-                      border:          "1px solid rgba(201,160,90,0.5)",
+                      border:          "1.5px solid var(--ochre)",
                       display:         "flex",
                       alignItems:      "center",
                       justifyContent:  "center",
                       flexShrink:      0,
                       marginTop:       "2px",
-                      color:           "var(--gold)",
-                      fontSize:        "9px",
+                      color:           "var(--ochre)",
+                      fontSize:        "10px",
+                      fontWeight:      600,
+                      background:      "rgba(201,160,90,0.08)",
+                      transition:      "all 0.3s ease",
                     }}
                   >
                     ✓
@@ -122,9 +166,10 @@ export default function NarrativeBlock() {
                   <p
                     className="font-heading"
                     style={{
-                      fontSize:   "0.875rem",
-                      color:      "rgba(240,236,228,0.65)",
+                      fontSize:   "0.95rem",
+                      color:      "var(--charcoal)",
                       fontWeight: 300,
+                      opacity:    0.75,
                     }}
                   >
                     {point}
@@ -134,16 +179,16 @@ export default function NarrativeBlock() {
             </div>
           </div>
 
-          {/* ── Image collage ── */}
+          {/* ── Image collage with parallax - DESKTOP ONLY ── */}
           <div
             data-reveal
-            className="relative hidden md:block"
+            className="relative hidden xl:block"
             style={{
               height:           "520px",
               transitionDelay:  "0.15s",
             }}
           >
-            {/* Large image */}
+            {/* Large image with parallax */}
             <div
               style={{
                 position:           "absolute",
@@ -153,10 +198,14 @@ export default function NarrativeBlock() {
                 backgroundImage:    "url('https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=700&q=80')",
                 backgroundSize:     "cover",
                 backgroundPosition: "center",
-                border:             "1px solid rgba(201,160,90,0.15)",
+                border:             "2px solid rgba(201,160,90,0.2)",
+                boxShadow:          "0 20px 60px rgba(0,0,0,0.15)",
+                transform:          `translateY(${scrollOffset * 0.3}px)`,
+                transition:         "transform 0.1s linear",
               }}
             />
-            {/* Small offset image */}
+            
+            {/* Small offset image with counter parallax */}
             <div
               style={{
                 position:           "absolute",
@@ -166,11 +215,14 @@ export default function NarrativeBlock() {
                 backgroundImage:    "url('https://images.unsplash.com/photo-1493770348161-369560ae357d?w=500&q=80')",
                 backgroundSize:     "cover",
                 backgroundPosition: "center",
-                border:             "1px solid rgba(201,160,90,0.3)",
-                boxShadow:          "0 24px 60px rgba(0,0,0,0.5)",
+                border:             "2px solid rgba(201,160,90,0.35)",
+                boxShadow:          "0 30px 80px rgba(0,0,0,0.25)",
+                transform:          `translateY(${scrollOffset * -0.2}px)`,
+                transition:         "transform 0.1s linear",
               }}
             />
-            {/* Decorative ring */}
+
+            {/* Decorative rings with subtle animation */}
             <div
               style={{
                 position:     "absolute",
@@ -179,7 +231,8 @@ export default function NarrativeBlock() {
                 width:        "90px",
                 height:       "90px",
                 borderRadius: "50%",
-                border:       "1px solid rgba(201,160,90,0.18)",
+                border:       "1.5px solid rgba(201,160,90,0.2)",
+                animation:    "pulse 3s ease-in-out infinite",
               }}
             />
             <div
@@ -190,13 +243,23 @@ export default function NarrativeBlock() {
                 width:        "60px",
                 height:       "60px",
                 borderRadius: "50%",
-                border:       "1px solid rgba(201,160,90,0.1)",
+                border:       "1.5px solid rgba(201,160,90,0.15)",
+                animation:    "pulse 3s ease-in-out infinite 0.5s",
               }}
             />
           </div>
 
+          {/* NO IMAGE ON MOBILE/TABLET - Text takes full width */}
+
         </div>
       </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); opacity: 0.3; }
+          50% { transform: scale(1.05); opacity: 0.5; }
+        }
+      `}</style>
     </section>
   );
 }

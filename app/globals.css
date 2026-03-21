@@ -17,6 +17,7 @@
   --panel:      #f0ebe0;
   --border:     rgba(139,101,63,0.15);
   --border-warm: rgba(139,101,63,0.25);
+  --deep:       #0a0a0a;
 
   /* Brand colors — rich earthy tones */
   --ochre:      #8b653f;
@@ -27,10 +28,10 @@
   --sage:       #7a9080;
   --terracotta: #c47854;
 
-  /* Text */
+  /* Text - improved contrast */
   --text-primary:   #2a2623;
-  --text-secondary: rgba(42,38,35,0.65);
-  --text-muted:     rgba(42,38,35,0.4);
+  --text-secondary: rgba(42,38,35,0.75);
+  --text-muted:     rgba(42,38,35,0.5);
   --text-inverse:   #f5f1e8;
 
   /* Legacy aliases */
@@ -50,6 +51,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-ochre:      var(--ochre);
+  --color-gold:       var(--gold);
+  --color-charcoal:   var(--charcoal);
   --font-sans:        var(--font-sora);
   --font-serif:       var(--font-dm-serif);
 }
@@ -66,6 +70,10 @@ html,
 body {
   width: 100%;
   overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -145,11 +153,11 @@ img { max-width: 100%; display: block; }
   z-index: 1;
 }
 
-/* ── Scroll reveal utility ── */
+/* ── Scroll reveal utility — Enhanced ── */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(36px);
-  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+  transform: translateY(40px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 [data-reveal].revealed {
   opacity: 1;
@@ -164,15 +172,77 @@ img { max-width: 100%; display: block; }
 .line-reveal span {
   display: block;
   transform: translateY(110%);
-  transition: transform 1s cubic-bezier(0.16,1,0.3,1);
+  transition: transform 1.1s cubic-bezier(0.16,1,0.3,1);
 }
 .line-reveal.revealed span {
   transform: translateY(0);
 }
 
-/* ── Hover lift ── */
-.hover-lift { transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease; }
+/* ── Hover lift — Enhanced ── */
+.hover-lift { 
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.5s ease; 
+}
 .hover-lift:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+/* ── Selection color ── */
+::selection {
+  background: rgba(139,101,63,0.25);
+  color: var(--charcoal);
+}
+
+/* ── Smooth scroll padding for anchor links ── */
+html {
+  scroll-padding-top: 80px;
+}
+
+/* ── Focus visible styles ── */
+*:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 4px;
+}
+
+/* ── Mobile touch optimization ── */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  
+  #juno-cursor {
+    display: none;
+  }
+}
+
+/* ── Utility animations ── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fadeIn { animation: fadeIn 0.6s ease-out; }
+.animate-slideUp { animation: slideUp 0.8s cubic-bezier(0.16,1,0.3,1); }
+.animate-scaleIn { animation: scaleIn 0.5s ease-out; }
+
+/* ── Loading skeleton ── */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--cream-dark) 25%, var(--sand) 50%, var(--cream-dark) 75%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
 }
