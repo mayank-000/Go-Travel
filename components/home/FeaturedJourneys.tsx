@@ -6,52 +6,47 @@ import { useRef, useState, useEffect, useCallback } from "react";
 const journeys = [
   {
     id: 1,
-    name: "The Clay Coast",
+    name:     "The Clay Coast",
     location: "Oaxaca, Mexico",
-    // Unique: focuses on the sensory & time-slowing nature of craft
-    tagline: "Your hands remember things your mind has forgotten. Seven days with master potters in the Oaxacan highlands to find out what they are.",
-    image: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=900&q=80",
-    tag: "Craft",
+    tagline:  "Your hands remember things your mind has forgotten. Seven days with master potters in the Oaxacan highlands to find out what they are.",
+    image:    "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=900&q=80",
+    tag:      "Craft",
     duration: "7 days",
   },
   {
     id: 2,
-    name: "Salt & Swell",
+    name:     "Salt & Swell",
     location: "Basque Country, Spain",
-    // Unique: focuses on the contrast — wild ocean, civilised table
-    tagline: "The Atlantic is brutal before breakfast. The txakoli is cold by evening. In between: a week of surf, fire, and one of the world's great food cultures.",
-    image: "/beachP3.jpg",
-    tag: "Sea",
+    tagline:  "The Atlantic is brutal before breakfast. The txakoli is cold by evening. In between: a week of surf, fire, and one of the world's great food cultures.",
+    image:    "/beachP3.jpg",
+    tag:      "Sea",
     duration: "8 days",
   },
   {
     id: 3,
-    name: "High Atlas Immersion",
+    name:     "High Atlas Immersion",
     location: "Morocco",
-    // Unique: focuses on the privilege of being welcomed
-    tagline: "These villages don't appear on itineraries. Berber families open their homes, their looms, and their tables to a group of eight. You won't find this elsewhere.",
-    image: "/trekkingWibeP4.jpg",
-    tag: "Culture",
+    tagline:  "These villages don't appear on itineraries. Berber families open their homes, their looms, and their tables to a group of eight. You won't find this elsewhere.",
+    image:    "/trekkingWibeP4.jpg",
+    tag:      "Culture",
     duration: "9 days",
   },
   {
     id: 4,
-    name: "Tea & Timber",
+    name:     "Tea & Timber",
     location: "Himachal Pradesh, India",
-    // Unique: focuses on pace and the craft of unhurried time
-    tagline: "A forest cabin at altitude. Days shaped by woodwork, natural dyeing, and the discipline of doing one thing slowly. No itinerary. No rush. Just craft and cold air.",
-    image: "/mountainP1.jpg",
-    tag: "Retreat",
+    tagline:  "A forest cabin at altitude. Days shaped by woodwork, natural dyeing, and the discipline of doing one thing slowly. No itinerary. No rush.",
+    image:    "/mountainP1.jpg",
+    tag:      "Retreat",
     duration: "6 days",
   },
   {
     id: 5,
-    name: "Salt Pan Evenings",
+    name:     "Salt Pan Evenings",
     location: "Kutch, Gujarat",
-    // Unique: focuses on scale, silence, and the night sky
-    tagline: "India flattens out completely here. The sky takes over. Winter in the Rann means near-silence, a community of makers, and stars so dense they cast shadows.",
-    image: "/desertP2.jpg",
-    tag: "Night",
+    tagline:  "India flattens out completely here. The sky takes over. Winter in the Rann means near-silence, a community of makers, and stars so dense they cast shadows.",
+    image:    "/desertP2.jpg",
+    tag:      "Night",
     duration: "7 days",
   },
 ];
@@ -68,7 +63,7 @@ export default function FeaturedJourneys() {
     setCanPrev(el.scrollLeft > 8);
     setCanNext(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
     const cardW = (el.children[0] as HTMLElement)?.offsetWidth ?? 0;
-    setCurrent(Math.round(el.scrollLeft / (cardW + 28)));
+    setCurrent(Math.round(el.scrollLeft / (cardW + 24)));
   }, []);
 
   useEffect(() => {
@@ -83,24 +78,33 @@ export default function FeaturedJourneys() {
     const el = carouselRef.current;
     if (!el) return;
     const cardW = (el.children[0] as HTMLElement)?.offsetWidth ?? 0;
-    el.scrollTo({ left: idx * (cardW + 28), behavior: "smooth" });
+    el.scrollTo({ left: idx * (cardW + 24), behavior: "smooth" });
   };
 
   return (
-    <section className="juno-section" style={{ backgroundColor: "var(--cream)" }}>
+    <section className="juno-section" style={{ backgroundColor: "var(--surface)" }}>
       <div className="juno-container">
 
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
           <div>
             <span
-              className="font-heading text-[9px] tracking-[0.38em] uppercase block mb-5"
-              style={{ color: "var(--sage)" }}
+              className="font-heading block mb-5"
+              style={{
+                fontSize:      "9px",
+                letterSpacing: "0.4em",
+                textTransform: "uppercase",
+                color:         "var(--sage)",
+              }}
             >
               Featured Journeys
             </span>
             <h2
-              className="font-serif italic leading-[1.06]"
-              style={{ fontSize: "clamp(2rem, 4vw, 3.5rem)", color: "var(--navy)" }}
+              className="font-serif italic"
+              style={{
+                fontSize:   "clamp(2rem,4vw,3.5rem)",
+                lineHeight: 1.05,
+                color:      "var(--text-primary)",
+              }}
             >
               Carefully curated,
               <br />
@@ -109,40 +113,45 @@ export default function FeaturedJourneys() {
           </div>
 
           <div className="flex items-center gap-4 shrink-0">
-            <button
-              onClick={() => goTo(current - 1)}
-              disabled={!canPrev}
-              aria-label="Previous journey"
-              style={{
-                width:          "44px", height: "44px", borderRadius: "50%",
-                border:         `1px solid ${canPrev ? "var(--ochre)" : "rgba(42,77,106,0.15)"}`,
-                background:     "transparent",
-                color:          canPrev ? "var(--navy)" : "rgba(61,61,61,0.25)",
-                cursor:         canPrev ? "pointer" : "default",
-                display:        "flex", alignItems: "center", justifyContent: "center",
-                fontSize:       "1rem", transition: "all 0.25s ease", flexShrink: 0,
-              }}
-            >←</button>
-            <button
-              onClick={() => goTo(current + 1)}
-              disabled={!canNext}
-              aria-label="Next journey"
-              style={{
-                width:          "44px", height: "44px", borderRadius: "50%",
-                border:         `1px solid ${canNext ? "var(--ochre)" : "rgba(42,77,106,0.15)"}`,
-                background:     "transparent",
-                color:          canNext ? "var(--navy)" : "rgba(61,61,61,0.25)",
-                cursor:         canNext ? "pointer" : "default",
-                display:        "flex", alignItems: "center", justifyContent: "center",
-                fontSize:       "1rem", transition: "all 0.25s ease", flexShrink: 0,
-              }}
-            >→</button>
+            {[{ dir: -1, can: canPrev, label: "←" }, { dir: 1, can: canNext, label: "→" }].map(({ dir, can, label }) => (
+              <button
+                key={label}
+                onClick={() => goTo(current + dir)}
+                disabled={!can}
+                style={{
+                  width:      "44px",
+                  height:     "44px",
+                  borderRadius: "50%",
+                  border:     `1px solid ${can ? "var(--gold)" : "rgba(255,255,255,0.08)"}`,
+                  background: can ? "rgba(201,160,90,0.08)" : "transparent",
+                  color:      can ? "var(--gold)" : "rgba(255,255,255,0.2)",
+                  cursor:     can ? "none" : "default",
+                  display:    "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize:   "1rem",
+                  transition: "all 0.25s ease",
+                }}
+              >
+                {label}
+              </button>
+            ))}
             <Link
               href="/trips"
-              className="font-heading text-[11px] tracking-[0.2em] uppercase border-b pb-1 transition-opacity duration-300 hover:opacity-50 ml-2"
-              style={{ color: "var(--navy)", borderColor: "var(--border-accent)" }}
+              className="font-heading ml-2"
+              style={{
+                fontSize:      "10px",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color:         "var(--gold)",
+                borderBottom:  "1px solid rgba(201,160,90,0.35)",
+                paddingBottom: "2px",
+                transition:    "opacity 0.3s ease",
+              }}
+              onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.5")}
+              onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
             >
-              View all journeys →
+              View all →
             </Link>
           </div>
         </div>
@@ -151,64 +160,86 @@ export default function FeaturedJourneys() {
           <div
             ref={carouselRef}
             className="no-scrollbar"
-            style={{ display: "flex", gap: "1.75rem", overflowX: "auto", paddingLeft: "1.25rem", paddingRight: "1.25rem", paddingBottom: "6px" }}
+            style={{
+              display:      "flex",
+              gap:          "1.5rem",
+              overflowX:    "auto",
+              paddingLeft:  "1.25rem",
+              paddingRight: "1.25rem",
+              paddingBottom: "8px",
+            }}
           >
-            {journeys.map((journey) => (
+            {journeys.map((j) => (
               <Link
-                href={`/trips/${journey.id}`}
-                key={journey.id}
+                href={`/trips/${j.id}`}
+                key={j.id}
                 className="group flex flex-col"
                 style={{
-                  flex: "0 0 clamp(260px, 28vw, 320px)",
-                  border: "1px solid var(--border-subtle)",
-                  borderRadius: "var(--card-radius)",
-                  overflow: "hidden",
-                  background: "var(--warm-white, #FDFAF4)",
-                  textDecoration: "none",
-                  transition: "transform 0.35s ease, box-shadow 0.35s ease",
+                  flex:        "0 0 clamp(260px,28vw,300px)",
+                  border:      "1px solid rgba(255,255,255,0.06)",
+                  overflow:    "hidden",
+                  background:  "var(--panel)",
+                  transition:  "transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease, border-color 0.3s ease",
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-5px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 16px 48px rgba(27,58,82,0.11)";
+                  (e.currentTarget as HTMLElement).style.transform   = "translateY(-8px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow   = "0 32px 80px rgba(0,0,0,0.6)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(201,160,90,0.25)";
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  (e.currentTarget as HTMLElement).style.transform   = "translateY(0)";
+                  (e.currentTarget as HTMLElement).style.boxShadow   = "none";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.06)";
                 }}
               >
+                {/* Image */}
                 <div style={{ position: "relative", overflow: "hidden", aspectRatio: "4/5" }}>
                   <div
-                    className="group-hover:scale-[1.05]"
+                    className="group-hover:scale-[1.06]"
                     style={{
-                      position: "absolute", inset: 0,
-                      backgroundImage: `url('${journey.image}')`,
-                      backgroundSize: "cover", backgroundPosition: "center",
-                      transition: "transform 0.7s ease",
+                      position:           "absolute",
+                      inset:              0,
+                      backgroundImage:    `url('${j.image}')`,
+                      backgroundSize:     "cover",
+                      backgroundPosition: "center",
+                      transition:         "transform 0.9s cubic-bezier(0.16,1,0.3,1)",
                     }}
                   />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(27,58,82,0.52) 0%, transparent 58%)", transition: "opacity 0.4s" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 55%)" }} />
+                  {/* Tag */}
                   <span
-                    className="font-heading"
-                    style={{ position: "absolute", top: "16px", left: "16px", fontSize: "8px", letterSpacing: "0.28em", textTransform: "uppercase", padding: "7px 14px", background: "rgba(247,243,234,0.95)", color: "var(--navy)" }}
+                    className="font-heading absolute"
+                    style={{
+                      top:           "14px",
+                      left:          "14px",
+                      fontSize:      "8px",
+                      letterSpacing: "0.3em",
+                      textTransform: "uppercase",
+                      padding:       "6px 14px",
+                      background:    "rgba(8,8,8,0.75)",
+                      color:         "var(--gold)",
+                      border:        "1px solid rgba(201,160,90,0.25)",
+                    }}
                   >
-                    {journey.tag}
+                    {j.tag}
                   </span>
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "2rem 2.2rem 2.2rem", flex: 1, borderTop: "1px solid var(--border-subtle)", background: "var(--cream)" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span className="font-heading" style={{ fontSize: "8.5px", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--sage)" }}>
-                      {journey.location}
+                {/* Body */}
+                <div style={{ padding: "1.75rem", display: "flex", flexDirection: "column", gap: "0.75rem", flex: 1, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span className="font-heading" style={{ fontSize: "8px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--sage)" }}>
+                      {j.location}
                     </span>
-                    <span className="font-heading" style={{ fontSize: "8.5px", letterSpacing: "0.15em", color: "var(--sand)" }}>
-                      {journey.duration}
+                    <span className="font-heading" style={{ fontSize: "8px", letterSpacing: "0.15em", color: "var(--text-muted)" }}>
+                      {j.duration}
                     </span>
                   </div>
-                  <h3 className="font-serif italic" style={{ fontSize: "clamp(1.35rem, 2vw, 1.7rem)", color: "var(--navy)", lineHeight: 1.1 }}>
-                    {journey.name}
+                  <h3 className="font-serif italic" style={{ fontSize: "clamp(1.3rem,2vw,1.6rem)", color: "var(--text-primary)", lineHeight: 1.1 }}>
+                    {j.name}
                   </h3>
-                  <p className="font-heading" style={{ fontSize: "0.875rem", color: "rgba(44,44,44,0.68)", fontWeight: 300, lineHeight: 1.7 }}>
-                    {journey.tagline}
+                  <p className="font-heading" style={{ fontSize: "0.825rem", color: "var(--text-secondary)", fontWeight: 300, lineHeight: 1.75 }}>
+                    {j.tagline}
                   </p>
                 </div>
               </Link>

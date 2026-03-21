@@ -1,101 +1,401 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-const galleryImages = [
+/* ────────────────────────────────────────────────────────────
+   GalleryTeaser — Magnetic Floating Cards
+   
+   A completely different approach:
+   - Cards float in 3D space with parallax depth
+   - Magnetic hover effects pull cards toward cursor
+   - Dramatic sequential reveals with blur & scale
+   - Ambient lighting that follows mouse
+──────────────────────────────────────────────────────────── */
+
+const images = [
+  { src: "/desertP2.jpg",       alt: "Salt flats at dawn",      label: "Kutch, Gujarat" },
+  { src: "/trekkingWibeP4.jpg", alt: "High Atlas trails",       label: "Morocco" },
+  { src: "/mountainP1.jpg",     alt: "Cedar forest at altitude",label: "Himachal" },
+  { src: "/beachP3.jpg",        alt: "Atlantic coast",          label: "Basque Country" },
   {
-    // ✅ LOCAL — wide desert hero, double-size slot
-    src: "/desertP2.jpg",
-    alt: "Desert landscape",
-    span: "md:col-span-2 md:row-span-2",
-  },
-  {
-    // ✅ LOCAL — trekking / adventure, replaces old Unsplash food shot
-    src: "/trekkingWibeP4.jpg",
-    alt: "Trekking adventure",
-    span: "",
-  },
-  {
-    // ✅ LOCAL — mountain landscape
-    src: "/mountainP1.jpg",
-    alt: "Mountain landscape",
-    span: "",
-  },
-  {
-    // Unsplash — open fire cooking (no local equivalent)
     src: "https://images.unsplash.com/photo-1544148103-0773bf10d330?w=600&q=80",
-    alt: "Open fire cooking",
-    span: "",
+    alt: "Open fire dinner",
+    label: "Oaxaca",
   },
   {
-    // ✅ LOCAL — beach / coast
-    src: "/beachP3.jpg",
-    alt: "Beach view",
-    span: "",
+    src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
+    alt: "Mountain landscape",
+    label: "Patagonia",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=600&q=80",
+    alt: "Desert dunes",
+    label: "Sahara",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=80",
+    alt: "Sunset landscape",
+    label: "Iceland",
   },
 ];
 
 export default function GalleryTeaser() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardsRef = useRef<HTMLDivElement>(null);
+  const lightRef = useRef<HTMLDivElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Mouse parallax effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sectionRef.current) return;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      setMousePos({ x, y });
+
+      // Move ambient light
+      if (lightRef.current) {
+        lightRef.current.style.left = `${e.clientX}px`;
+        lightRef.current.style.top = `${e.clientY}px`;
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // GSAP scroll animation
+  useEffect(() => {
+    const run = async () => {
+      const { gsap } = await import("gsap");
+      const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+      gsap.registerPlugin(ScrollTrigger);
+
+      const cards = cardsRef.current?.querySelectorAll(".gallery-card");
+      if (!cards?.length) return;
+
+      // Title reveal
+      gsap.fromTo(
+        ".gallery-title",
+        {
+          y: 100,
+          opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.4,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 60%",
+          },
+        }
+      );
+
+      // Cards cascade in with dramatic effect
+      gsap.fromTo(
+        cards,
+        {
+          y: 200,
+          opacity: 0,
+          scale: 0.6,
+          rotateX: 45,
+          filter: "blur(20px)",
+        },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          rotateX: 0,
+          filter: "blur(0px)",
+          duration: 1.8,
+          ease: "power4.out",
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 55%",
+          },
+        }
+      );
+    };
+    run();
+  }, []);
+
   return (
-    <section className="juno-section" style={{ backgroundColor: "var(--cream)" }}>
-
-      {/* Tension line */}
+    <section
+      ref={sectionRef}
+      className="relative overflow-hidden"
+      style={{
+        backgroundColor: "var(--cream)",
+        paddingTop: "clamp(4rem,8vw,7rem)",
+        paddingBottom: "clamp(4rem,8vw,7rem)",
+        perspective: "2000px",
+      }}
+    >
+      {/* Ambient light that follows cursor */}
       <div
-        className="juno-container pt-2 pb-8 md:pb-10 text-center border-b"
-        style={{ borderColor: "var(--border-accent)" }}
-      >
-        <h2
-          className="font-serif italic"
-          style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)", color: "var(--navy)", lineHeight: 1.25 }}
-        >
-          You have been everywhere.
-          <br />
-          But have you ever truly{" "}
-          <span style={{ color: "var(--ochre)" }}>arrived?</span>
-        </h2>
-      </div>
+        ref={lightRef}
+        className="fixed pointer-events-none"
+        style={{
+          width: "600px",
+          height: "600px",
+          background: "radial-gradient(circle, rgba(201,160,90,0.15) 0%, transparent 70%)",
+          transform: "translate(-50%, -50%)",
+          filter: "blur(80px)",
+          transition: "left 0.3s ease, top 0.3s ease",
+          zIndex: 1,
+        }}
+      />
 
-      {/* Gallery section */}
-      <div className="juno-container pt-10 md:pt-14">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
-          <div>
-            <span
-              className="font-heading text-[9px] tracking-[0.35em] uppercase block mb-3"
-              style={{ color: "var(--sage)" }}
-            >
-              Gallery
-            </span>
-            <p
-              className="font-heading text-base md:text-lg"
-              style={{ color: "rgba(44,44,44,0.65)", maxWidth: "420px", fontWeight: 300 }}
-            >
-              Ready to see the world JUNO opens up? Every image is a room you
-              have not walked into yet.
-            </p>
-          </div>
-          <Link
-            href="/gallery"
-            className="font-heading text-xs tracking-[0.2em] uppercase border-b pb-1 shrink-0 transition-opacity duration-300 hover:opacity-50"
-            style={{ color: "var(--navy)", borderColor: "var(--ochre)" }}
+      <div className="juno-container relative" style={{ zIndex: 2 }}>
+        {/* Title Section */}
+        <div className="text-center mb-12 gallery-title">
+          <span
+            className="font-heading block mb-4"
+            style={{
+              fontSize: "clamp(10px,1.1vw,12px)",
+              letterSpacing: "0.5em",
+              textTransform: "uppercase",
+              color: "var(--ochre)",
+              fontWeight: 600,
+            }}
           >
-            View More →
-          </Link>
+            Visual Stories
+          </span>
+
+          <h2
+            className="font-serif"
+            style={{
+              fontSize: "clamp(3rem,7vw,7rem)",
+              lineHeight: 0.95,
+              color: "var(--charcoal)",
+              fontWeight: 400,
+              marginBottom: "1.5rem",
+            }}
+          >
+            Moments that
+            <br />
+            <em style={{ color: "var(--ochre)", fontStyle: "italic" }}>breathe</em>
+          </h2>
+
+          <p
+            className="font-heading mx-auto"
+            style={{
+              fontSize: "clamp(1rem,1.4vw,1.1rem)",
+              color: "var(--text-secondary)",
+              maxWidth: "500px",
+              lineHeight: 1.7,
+              fontWeight: 300,
+            }}
+          >
+            Every photograph holds a world. Step closer.
+          </p>
         </div>
 
-        {/* Image grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 md:gap-3 h-[380px] md:h-[480px]">
-          {galleryImages.map((img, i) => (
-            <div key={i} className={`relative overflow-hidden group ${img.span}`}>
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                style={{ backgroundImage: `url('${img.src}')` }}
-              />
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ backgroundColor: "rgba(27,59,87,0.25)" }}
-              />
-            </div>
+        {/* Floating Cards Grid */}
+        <div
+          ref={cardsRef}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
+          style={{
+            maxWidth: "1400px",
+            margin: "0 auto",
+          }}
+        >
+          {images.map((img, i) => (
+            <FloatingCard
+              key={i}
+              image={img}
+              index={i}
+              mousePos={mousePos}
+            />
           ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center" style={{ marginTop: "clamp(4rem,8vw,6rem)" }}>
+          <Link
+            href="/gallery"
+            className="font-heading inline-flex items-center gap-3 group"
+            style={{
+              fontSize: "clamp(10px,1.1vw,11px)",
+              letterSpacing: "0.35em",
+              textTransform: "uppercase",
+              color: "var(--ochre)",
+              fontWeight: 600,
+              padding: "1.2rem 2.8rem",
+              border: "2px solid var(--ochre)",
+              position: "relative",
+              overflow: "hidden",
+              transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--cream)";
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--ochre-dark)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--ochre)";
+              (e.currentTarget as HTMLElement).style.borderColor = "var(--ochre)";
+            }}
+          >
+            <span
+              className="absolute inset-0 bg-gradient-to-r from-ochre to-ochre-dark"
+              style={{
+                transform: "translateX(-100%)",
+                transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+                zIndex: -1,
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.transform = "translateX(0)";
+              }}
+            />
+            <span style={{ position: "relative", zIndex: 1 }}>Explore Gallery</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              style={{
+                transition: "transform 0.4s cubic-bezier(0.16,1,0.3,1)",
+              }}
+              className="group-hover:translate-x-1"
+            >
+              <path
+                d="M1 8h14M9 2l6 6-6 6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>
+  );
+}
+
+/* ── Floating Card Component ── */
+function FloatingCard({
+  image,
+  index,
+  mousePos,
+}: {
+  image: { src: string; alt: string; label: string };
+  index: number;
+  mousePos: { x: number; y: number };
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Parallax depth based on mouse position
+  useEffect(() => {
+    if (!cardRef.current) return;
+    
+    // Disable parallax on mobile/touch devices
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouchDevice) return;
+    
+    const depth = (index % 3) + 1; // Different depth layers
+    const moveX = (mousePos.x - 0.5) * depth * 20;
+    const moveY = (mousePos.y - 0.5) * depth * 15;
+
+    if (!isHovered) {
+      cardRef.current.style.transform = `
+        translateX(${moveX}px) 
+        translateY(${moveY}px) 
+        translateZ(${depth * 10}px)
+      `;
+    }
+  }, [mousePos, index, isHovered]);
+
+  return (
+    <div
+      ref={cardRef}
+      className="gallery-card group cursor-pointer"
+      style={{
+        position: "relative",
+        transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
+        transformStyle: "preserve-3d",
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div
+        style={{
+          position: "relative",
+          aspectRatio: "3/4",
+          overflow: "hidden",
+          borderRadius: "2px",
+          boxShadow: isHovered
+            ? "0 30px 80px rgba(0,0,0,0.3)"
+            : "0 10px 40px rgba(0,0,0,0.15)",
+          transition: "box-shadow 0.6s cubic-bezier(0.16,1,0.3,1)",
+        }}
+      >
+        {/* Image */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url('${image.src}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            transform: isHovered ? "scale(1.03)" : "scale(1)",
+            transition: "transform 1.2s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        />
+
+        {/* Gradient overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 35%, transparent 55%)",
+            transition: "opacity 0.4s ease",
+          }}
+        />
+
+        {/* Label */}
+        <div
+          className="absolute bottom-0 left-0 right-0"
+          style={{
+            padding: "clamp(1rem,4vw,1.5rem) clamp(1rem,4vw,1.5rem) clamp(1.5rem,5vw,2rem)",
+            transform: "translateY(0)",
+            opacity: 1,
+            transition: "all 0.5s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        >
+          <span
+            className="font-heading block"
+            style={{
+              fontSize: "clamp(10px,1.1vw,12px)",
+              letterSpacing: "0.3em",
+              textTransform: "uppercase",
+              color: "var(--cream)",
+              fontWeight: 600,
+              textShadow: "0 3px 12px rgba(0,0,0,0.9)",
+              lineHeight: 1.3,
+            }}
+          >
+            {image.label}
+          </span>
+        </div>
+
+        {/* Shine effect on hover */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%)",
+            transform: isHovered ? "translateX(100%)" : "translateX(-100%)",
+            transition: "transform 0.8s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        />
+      </div>
+    </div>
   );
 }

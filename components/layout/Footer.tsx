@@ -1,57 +1,91 @@
+'use client'
 import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer style={{ backgroundColor: "var(--navy)", borderTop: "1px solid rgba(200,135,58,0.15)" }}>
-      <div className="juno-container py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-12">
+    <footer
+      style={{
+        backgroundColor: "var(--deep)",
+        borderTop:       "1px solid rgba(201,160,90,0.1)",
+      }}
+    >
+      <div className="juno-container py-14 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 mb-14">
 
           {/* Brand */}
           <div className="flex flex-col gap-5">
             <div>
-              <span className="font-serif italic text-3xl block" style={{ color: "var(--cream)" }}>
+              <span
+                className="font-serif italic block"
+                style={{ fontSize: "2rem", color: "var(--text-primary)" }}
+              >
                 JUNO
               </span>
               <span
-                className="font-heading text-[9px] tracking-[0.3em] uppercase"
-                style={{ color: "var(--sage)" }}
+                className="font-heading"
+                style={{
+                  fontSize:      "7px",
+                  letterSpacing: "0.35em",
+                  textTransform: "uppercase",
+                  color:         "var(--gold)",
+                }}
               >
                 Journeys
               </span>
             </div>
             <p
-              className="font-heading text-sm leading-relaxed max-w-xs"
-              style={{ color: "rgba(248,244,236,0.45)" }}
+              className="font-heading"
+              style={{
+                fontSize:   "0.875rem",
+                fontWeight: 300,
+                color:      "var(--text-muted)",
+                maxWidth:   "260px",
+                lineHeight: 1.8,
+              }}
             >
               India&apos;s first invite-only experiential journey club. A quiet circle
               of people who choose depth over noise.
             </p>
-            <p className="font-heading text-xs" style={{ color: "rgba(138,158,143,0.7)" }}>
-              📧 hello@junojourneys.in
+            <p
+              className="font-heading"
+              style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+            >
+              hello@junojourneys.in
             </p>
           </div>
 
           {/* Nav */}
           <div className="flex flex-col gap-3">
             <p
-              className="font-heading text-[9px] tracking-[0.3em] uppercase mb-3"
-              style={{ color: "var(--sage)" }}
+              className="font-heading mb-3"
+              style={{
+                fontSize:      "9px",
+                letterSpacing: "0.35em",
+                textTransform: "uppercase",
+                color:         "var(--sage)",
+              }}
             >
               Explore
             </p>
             {[
-              ["About", "/about"],
+              ["About",          "/about"],
               ["Upcoming Trips", "/trips"],
-              ["Gallery", "/gallery"],
-              ["Blog", "/blog"],
-              ["FAQ", "/faq"],
-              ["Contact", "/contact"],
+              ["Gallery",        "/gallery"],
+              ["Blog",           "/blog"],
+              ["FAQ",            "/faq"],
+              ["Contact",        "/contact"],
             ].map(([label, href]) => (
               <Link
                 key={href}
                 href={href}
-                className="font-heading text-sm transition-opacity duration-300 hover:opacity-50 w-fit"
-                style={{ color: "rgba(248,244,236,0.65)" }}
+                className="font-heading w-fit transition-all duration-300"
+                style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--gold)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.color = "var(--text-secondary)";
+                }}
               >
                 {label}
               </Link>
@@ -61,45 +95,81 @@ export default function Footer() {
           {/* Invite */}
           <div className="flex flex-col gap-5">
             <p
-              className="font-heading text-[9px] tracking-[0.3em] uppercase"
-              style={{ color: "var(--sage)" }}
+              className="font-heading"
+              style={{
+                fontSize:      "9px",
+                letterSpacing: "0.35em",
+                textTransform: "uppercase",
+                color:         "var(--sage)",
+              }}
             >
               Join Us
             </p>
             <p
-              className="font-heading text-sm leading-relaxed"
-              style={{ color: "rgba(248,244,236,0.45)" }}
+              className="font-heading"
+              style={{
+                fontSize:   "0.875rem",
+                fontWeight: 300,
+                color:      "var(--text-muted)",
+                lineHeight: 1.8,
+              }}
             >
               Our journeys are invite-only, limited to 12 people. Apply to join
               the JUNO inner circle.
             </p>
             <Link
               href="/invite"
-              className="font-heading text-[11px] tracking-[0.2em] uppercase px-6 py-3 w-fit border transition-all duration-300 hover:opacity-70"
+              className="font-heading w-fit"
               style={{
-                borderColor: "rgba(219,175,132,0.35)",
-                color: "var(--sand)",
+                fontSize:      "9px",
+                letterSpacing: "0.25em",
+                textTransform: "uppercase",
+                padding:       "0.75rem 1.75rem",
+                border:        "1px solid rgba(201,160,90,0.35)",
+                color:         "var(--gold)",
+                transition:    "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background   = "rgba(201,160,90,0.08)";
+                (e.currentTarget as HTMLElement).style.borderColor  = "var(--gold)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background   = "transparent";
+                (e.currentTarget as HTMLElement).style.borderColor  = "rgba(201,160,90,0.35)";
               }}
             >
               Request Invite →
             </Link>
-            <p className="font-heading text-xs mt-2" style={{ color: "rgba(138,158,143,0.6)" }}>
-              📱 @junojourneys
+            <p
+              className="font-heading"
+              style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}
+            >
+              @junojourneys
             </p>
           </div>
+
         </div>
 
         {/* Bottom */}
         <div
-          className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-8 border-t"
-          style={{ borderColor: "rgba(138,158,143,0.12)" }}
+          className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-8"
+          style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
         >
-          <p className="font-heading text-xs" style={{ color: "rgba(248,244,236,0.25)" }}>
+          <p
+            className="font-heading"
+            style={{ fontSize: "0.75rem", color: "var(--text-muted)", opacity: 0.6 }}
+          >
             © {new Date().getFullYear()} JUNO Journeys. All rights reserved.
           </p>
           <p
-            className="font-heading text-[10px] tracking-[0.2em] uppercase"
-            style={{ color: "rgba(138,158,143,0.4)" }}
+            className="font-heading"
+            style={{
+              fontSize:      "9px",
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color:         "var(--text-muted)",
+              opacity:       0.4,
+            }}
           >
             Curated with intention · Made in India
           </p>

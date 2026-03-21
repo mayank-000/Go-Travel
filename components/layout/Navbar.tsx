@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 const navLinks = [
   { label: "About",          href: "/about",   sectionId: "about"   },
-  { label: "Upcoming Trips", href: "/trips",   sectionId: "trips"   },
+  { label: "Journeys",       href: "/trips",   sectionId: "trips"   },
   { label: "Gallery",        href: "/gallery", sectionId: "gallery" },
   { label: "Blog",           href: "/blog",    sectionId: "blog"    },
   { label: "FAQ",            href: "/faq",     sectionId: "faq"     },
@@ -28,34 +28,39 @@ function smoothScrollTo(targetY: number, duration = 1100) {
 }
 
 function scrollToSection(id: string) {
-  const el  = document.getElementById(id);
+  const el = document.getElementById(id);
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  const top = el.getBoundingClientRect().top + window.scrollY - 72;
   smoothScrollTo(top, 1200);
 }
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeId, setActiveId] = useState("");
-  const pathname = usePathname();
-  const router   = useRouter();
-  const isHome   = pathname === "/";
+  const [scrolled,  setScrolled]  = useState(false);
+  const [menuOpen,  setMenuOpen]  = useState(false);
+  const [activeId,  setActiveId]  = useState("");
+  const pathname  = usePathname();
+  const router    = useRouter();
+  const isHome    = pathname === "/";
+  const navRef    = useRef<HTMLElement>(null);
 
+  /* ── scroll shadow ── */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 48);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* ── section active tracking ── */
   useEffect(() => {
     if (!isHome) return;
-    const ids = navLinks.map((l) => l.sectionId);
     const obs = new IntersectionObserver(
-      (entries) => { entries.forEach((e) => { if (e.isIntersecting) setActiveId(e.target.id); }); },
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) setActiveId(e.target.id); }),
       { rootMargin: "-40% 0px -55% 0px" }
     );
-    ids.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
+    navLinks.forEach(({ sectionId }) => {
+      const el = document.getElementById(sectionId);
+      if (el) obs.observe(el);
+    });
     return () => obs.disconnect();
   }, [isHome]);
 
@@ -65,14 +70,6 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
-
-  useEffect(() => {
-    if (!isHome) return;
-    const hash = window.location.hash.replace("#", "");
-    if (hash) setTimeout(() => scrollToSection(hash), 400);
-  }, [isHome]);
-
-  const forceLight = !isHome || scrolled;
 
   const handleNavClick = (e: React.MouseEvent, href: string, sectionId: string) => {
     if (isHome) {
@@ -87,51 +84,71 @@ export default function Navbar() {
 
   return (
     <>
+      {/* ── Custom cursor dot ── */}
+      <div id="juno-cursor" />
+
       <nav
+        ref={navRef}
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-700"
         style={{
-          backgroundColor:      forceLight ? "rgba(247,243,234,0.96)" : "transparent",
-          backdropFilter:       forceLight ? "blur(18px)" : "none",
-          WebkitBackdropFilter: forceLight ? "blur(18px)" : "none",
-          borderBottom:         forceLight ? "1px solid rgba(201,139,45,0.15)" : "none",
+          backgroundColor: scrolled
+            ? "rgba(245,241,232,0.95)"
+            : "transparent",
+          backdropFilter:       scrolled ? "blur(20px) saturate(1.1)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(20px) saturate(1.1)" : "none",
+          borderBottom: scrolled
+            ? "1px solid rgba(139,101,63,0.15)"
+            : "none",
         }}
       >
-        <div className="juno-container flex items-center justify-between h-20">
+        <div className="juno-container flex items-center justify-between" style={{ height: "72px" }}>
 
-          {/* ── Logo — original colors, no filter ── */}
+          {/* ── Logo: JUNO with original colors ── */}
           <button
             onClick={() => isHome ? smoothScrollTo(0, 900) : router.push("/")}
-            className="flex items-center gap-3 bg-transparent border-none cursor-pointer p-0"
+            className="flex items-center gap-3 bg-transparent border-none p-0"
+            style={{ cursor: "none" }}
           >
+            {/* Logo image - no filter, show as-is */}
             <img
               src="/JUNO_LOGO.png"
-              alt="JUNO logo"
+              alt="JUNO"
               style={{
-                width:     "56px",
-                height:    "56px",
+                width:     "44px",
+                height:    "44px",
                 objectFit: "contain",
-                display:   "block",
-                // No filter — logo renders in its own original colors
               }}
             />
+            {/* Wordmark */}
             <div className="flex flex-col leading-none">
               <span
-                className="font-serif italic text-2xl tracking-wide"
-                style={{ color: forceLight ? "var(--navy)" : "var(--cream)" }}
+                className="font-serif italic"
+                style={{
+                  fontSize:    "1.5rem",
+                  letterSpacing: "0.04em",
+                  color:       "var(--text-primary)",
+                }}
               >
                 JUNO
               </span>
               <span
-                className="font-heading text-[9px] tracking-[0.28em] uppercase"
-                style={{ color: forceLight ? "var(--sage)" : "rgba(212,165,116,0.8)" }}
+                className="font-heading"
+                style={{
+                  fontSize:      "7px",
+                  letterSpacing: "0.35em",
+                  textTransform: "uppercase",
+                  color:         "var(--ochre)",
+                  marginTop:     "1px",
+                  fontWeight:    500,
+                }}
               >
                 Journeys
               </span>
             </div>
           </button>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-8">
+          {/* ── Desktop links ── */}
+          <div className="hidden md:flex items-center gap-9">
             {navLinks.map((link) => {
               const isActive = isHome ? activeId === link.sectionId : pathname === link.href;
               return (
@@ -139,48 +156,100 @@ export default function Navbar() {
                   key={link.sectionId}
                   href={isHome ? `#${link.sectionId}` : link.href}
                   onClick={(e) => handleNavClick(e, link.href, link.sectionId)}
-                  className="font-heading text-[11px] tracking-[0.14em] uppercase relative group transition-opacity duration-300 hover:opacity-50"
-                  style={{ color: forceLight ? "var(--charcoal)" : "var(--cream)", textDecoration: "none" }}
+                  className="font-heading relative group"
+                  style={{
+                    fontSize:      "10px",
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: isActive ? "var(--ochre)" : "var(--text-secondary)",
+                    textDecoration: "none",
+                    transition:    "color 0.3s ease",
+                    fontWeight:    isActive ? 500 : 400,
+                  }}
+                  onMouseEnter={(e) => { 
+                    (e.currentTarget as HTMLElement).style.color = "var(--text-primary)"; 
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.color = isActive
+                      ? "var(--ochre)"
+                      : "var(--text-secondary)";
+                  }}
                 >
                   {link.label}
+                  {/* Active underline */}
                   <span
-                    className="absolute -bottom-1 left-0 h-px transition-all duration-400"
-                    style={{ width: isActive ? "100%" : "0%", backgroundColor: "var(--ochre)" }}
+                    style={{
+                      position:        "absolute",
+                      bottom:          "-4px",
+                      left:            0,
+                      height:          "1.5px",
+                      width:           isActive ? "100%" : "0%",
+                      backgroundColor: "var(--ochre)",
+                      transition:      "width 0.35s ease",
+                    }}
                   />
-                  {!isActive && (
-                    <span
-                      className="absolute -bottom-1 left-0 w-0 h-px group-hover:w-full transition-all duration-300"
-                      style={{ backgroundColor: "var(--ochre)" }}
-                    />
-                  )}
+                  {/* Hover underline */}
+                  <span
+                    className="group-hover:w-full"
+                    style={{
+                      position:        "absolute",
+                      bottom:          "-4px",
+                      left:            0,
+                      height:          "1px",
+                      width:           "0%",
+                      backgroundColor: "rgba(139,101,63,0.35)",
+                      transition:      "width 0.3s ease",
+                    }}
+                  />
                 </a>
               );
             })}
           </div>
 
-          {/* CTA + Burger */}
+          {/* ── CTA + Burger ── */}
           <div className="flex items-center gap-5">
             <a
               href={isHome ? "#contact" : "/contact"}
               onClick={(e) => handleNavClick(e, "/contact", "contact")}
-              className="hidden md:inline-flex font-heading text-[11px] tracking-[0.18em] uppercase px-6 py-3 transition-all duration-300 hover:opacity-80"
-              style={{ backgroundColor: "var(--navy)", color: "var(--cream)", textDecoration: "none" }}
+              className="hidden md:inline-flex font-heading items-center gap-2"
+              style={{
+                fontSize:        "9px",
+                letterSpacing:   "0.22em",
+                textTransform:   "uppercase",
+                padding:         "0.7rem 1.6rem",
+                background:      "var(--ochre)",
+                color:           "var(--cream)",
+                fontWeight:      600,
+                textDecoration:  "none",
+                transition:      "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.background  = "var(--ochre-dark)";
+                (e.currentTarget as HTMLElement).style.transform   = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background  = "var(--ochre)";
+                (e.currentTarget as HTMLElement).style.transform   = "translateY(0)";
+              }}
             >
               Request Invite
             </a>
 
+            {/* Burger */}
             <button
-              className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 bg-transparent border-none cursor-pointer"
+              className="md:hidden flex flex-col justify-center gap-[5px] bg-transparent border-none"
+              style={{ width: "32px", height: "32px", cursor: "none" }}
               onClick={() => setMenuOpen(!menuOpen)}
               aria-label="Toggle menu"
             >
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
-                  className="block h-px transition-all duration-300 origin-center"
+                  className="block transition-all duration-300 origin-center"
                   style={{
-                    backgroundColor: forceLight ? "var(--navy)" : "var(--cream)",
-                    width:     i === 1 ? "1.2rem" : "1.5rem",
+                    height:          "1.5px",
+                    backgroundColor: "var(--text-primary)",
+                    width:     i === 1 ? "18px" : "24px",
                     transform: menuOpen
                       ? i === 0 ? "rotate(45deg) translate(4px,4px)"
                       : i === 2 ? "rotate(-45deg) translate(4px,-4px)"
@@ -195,29 +264,28 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile fullscreen menu */}
+      {/* ── Mobile fullscreen menu ── */}
       <div
         className="fixed inset-0 z-40 flex flex-col justify-center items-center gap-6 md:hidden"
         style={{
-          backgroundColor: "var(--navy)",
+          backgroundColor: "var(--cream)",
           opacity:         menuOpen ? 1 : 0,
           pointerEvents:   menuOpen ? "all" : "none",
           transition:      "opacity 0.45s ease",
         }}
       >
-        <div className="flex items-center gap-3 mb-4">
+        {/* Logo in menu - original colors */}
+        <div className="flex items-center gap-3 mb-6">
           <img
             src="/JUNO_LOGO.png"
             alt="JUNO"
-            style={{
-              width:     "52px",
-              height:    "52px",
+            style={{ 
+              width: "40px", 
+              height: "40px", 
               objectFit: "contain",
-              display:   "block",
-              // No filter — original colors
             }}
           />
-          <span className="font-serif italic text-2xl" style={{ color: "var(--cream)" }}>
+          <span className="font-serif italic text-2xl" style={{ color: "var(--text-primary)" }}>
             JUNO
           </span>
         </div>
@@ -229,15 +297,12 @@ export default function Navbar() {
             onClick={(e) => handleNavClick(e, link.href, link.sectionId)}
             className="font-serif italic"
             style={{
-              fontSize:                 "clamp(2rem, 8vw, 2.8rem)",
-              color:                    activeId === link.sectionId ? "var(--ochre)" : "var(--cream)",
-              textDecoration:           "none",
-              transform:                menuOpen ? "translateY(0)" : "translateY(14px)",
-              opacity:                  menuOpen ? 1 : 0,
-              transitionProperty:       "transform, opacity, color",
-              transitionDuration:       "0.4s, 0.4s, 0.3s",
-              transitionTimingFunction: "ease, ease, ease",
-              transitionDelay:          menuOpen ? `${i * 55}ms` : "0ms",
+              fontSize:        "clamp(1.8rem, 7vw, 2.6rem)",
+              color:           activeId === link.sectionId ? "var(--ochre)" : "var(--text-primary)",
+              textDecoration:  "none",
+              transform:       menuOpen ? "translateY(0)" : "translateY(16px)",
+              opacity:         menuOpen ? 1 : 0,
+              transition:      `transform 0.4s ease ${i * 55}ms, opacity 0.4s ease ${i * 55}ms, color 0.3s ease`,
             }}
           >
             {link.label}
@@ -247,16 +312,18 @@ export default function Navbar() {
         <a
           href={isHome ? "#contact" : "/contact"}
           onClick={(e) => handleNavClick(e, "/contact", "contact")}
-          className="font-heading text-[11px] tracking-[0.22em] uppercase px-10 py-4 mt-4"
+          className="font-heading mt-4"
           style={{
-            backgroundColor:          "var(--ochre)",
-            color:                    "var(--navy)",
-            textDecoration:           "none",
-            opacity:                  menuOpen ? 1 : 0,
-            transitionProperty:       "opacity",
-            transitionDuration:       "0.4s",
-            transitionTimingFunction: "ease",
-            transitionDelay:          menuOpen ? `${navLinks.length * 55}ms` : "0ms",
+            fontSize:        "10px",
+            letterSpacing:   "0.25em",
+            textTransform:   "uppercase",
+            padding:         "1rem 2.5rem",
+            background:      "var(--ochre)",
+            color:           "var(--cream)",
+            fontWeight:      600,
+            textDecoration:  "none",
+            opacity:         menuOpen ? 1 : 0,
+            transition:      `opacity 0.4s ease ${navLinks.length * 55}ms`,
           }}
         >
           Request Invite

@@ -1,34 +1,55 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════════════════════════
+   JUNO — Warm Cream Luxury Palette
+   Sophisticated light theme with warm earth tones
+═══════════════════════════════════════════════════════ */
 :root {
-  --cream:    #F7F3EA;
-  --navy:     #2a4d6a;
-  --sand:     #e4b896;
-  --ochre:    #c98b2d;
-  --sage:     #8b9a8f;
-  --charcoal: #3d3d3d;
+  /* Core warm palette */
+  --cream:      #f5f1e8;
+  --cream-dark: #ebe5d6;
+  --warm-white: #fdfcf9;
+  --sand:       #e8dcc8;
+  --clay:       #d4c4ac;
+  
+  /* Surface variations */
+  --surface:    #faf8f3;
+  --panel:      #f0ebe0;
+  --border:     rgba(139,101,63,0.15);
+  --border-warm: rgba(139,101,63,0.25);
+
+  /* Brand colors — rich earthy tones */
+  --ochre:      #8b653f;
+  --ochre-dark: #6b4d2e;
+  --gold:       #c9a05a;
+  --gold-light: #e8c97a;
+  --rust:       #a05c3a;
+  --sage:       #7a9080;
+  --terracotta: #c47854;
+
+  /* Text */
+  --text-primary:   #2a2623;
+  --text-secondary: rgba(42,38,35,0.65);
+  --text-muted:     rgba(42,38,35,0.4);
+  --text-inverse:   #f5f1e8;
+
+  /* Legacy aliases */
+  --charcoal: #2a2623;
+  --navy:     #1a2633;
 
   --background: var(--cream);
-  --foreground: var(--charcoal);
+  --foreground: var(--text-primary);
 
-  --section-padding-y:    3.5rem;
-  --section-padding-y-md: 5rem;
-  --card-radius:          0.75rem;
+  --section-padding-y:    4rem;
+  --section-padding-y-md: 7rem;
+  --card-radius:          4px;
   --card-padding:         2rem;
   --card-padding-md:      2.5rem;
-  --border-subtle:        rgba(42, 77, 106, 0.12);
-  --border-accent:        rgba(201, 139, 45, 0.35);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-cream:      var(--cream);
-  --color-navy:       var(--navy);
-  --color-sand:       var(--sand);
-  --color-ochre:      var(--ochre);
-  --color-sage:       var(--sage);
-  --color-charcoal:   var(--charcoal);
   --font-sans:        var(--font-sora);
   --font-serif:       var(--font-dm-serif);
 }
@@ -45,17 +66,38 @@ html,
 body {
   width: 100%;
   overflow-x: hidden;
-  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--cream);
-  color: var(--charcoal);
+  color: var(--text-primary);
   font-family: var(--font-sora), sans-serif;
   font-size: 16px;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Custom cursor ── */
+*, *::before, *::after { cursor: none !important; }
+
+#juno-cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--ochre);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease;
+  mix-blend-mode: difference;
+}
+#juno-cursor.hovering {
+  width: 40px; height: 40px;
+  background: rgba(139,101,63,0.12);
+  border: 1px solid var(--ochre);
+  mix-blend-mode: normal;
 }
 
 .font-heading { font-family: var(--font-sora), sans-serif; }
@@ -93,24 +135,44 @@ body {
 a   { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
-main {
-  width: 100%;
-  animation: fadeIn 0.45s ease-out both;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.juno-section-scroll {
-  position: relative;
-  z-index: 0;
-  will-change: transform, opacity;
-  transition: none;
+/* ── Subtle grain overlay ── */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
 }
 
-.hover-lift { transition: transform 0.35s ease, box-shadow 0.35s ease; }
+/* ── Scroll reveal utility ── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+}
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Line reveal for headings ── */
+.line-reveal {
+  overflow: hidden;
+  display: block;
+}
+.line-reveal span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 1s cubic-bezier(0.16,1,0.3,1);
+}
+.line-reveal.revealed span {
+  transform: translateY(0);
+}
+
+/* ── Hover lift ── */
+.hover-lift { transition: transform 0.45s cubic-bezier(0.16,1,0.3,1), box-shadow 0.45s ease; }
 .hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(42, 77, 106, 0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
 }

@@ -3,10 +3,15 @@
 import { useEffect, useRef, ReactNode } from "react";
 
 /**
- * ScrollFader
- * Each child section starts blurred + slightly faded when it's below the viewport.
- * As you scroll into it, it sharpens and reveals — like lifting a veil.
- * Sections already read stay fully sharp. Only what's coming stays mysterious.
+ * ScrollFader v2 — Framer-style scroll reveal
+ *
+ * Each direct child section:
+ *  - Starts below viewport: blurred, faded, slightly scaled down
+ *  - On scroll into view: springs into full clarity
+ *  - Already-read sections: stay fully clear (no re-hiding)
+ *
+ * Uses a requestAnimationFrame loop for buttery 60fps updates.
+ * Pairs with Lenis smooth scroll for best results.
  */
 export default function ScrollFader({ children }: { children: ReactNode }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -17,36 +22,55 @@ export default function ScrollFader({ children }: { children: ReactNode }) {
       : [];
     if (!sections.length) return;
 
+    /* Track which sections have been revealed */
+    const revealed = new Set<HTMLElement>();
+
+    let rafId: number;
+
     const tick = () => {
       const vh = window.innerHeight;
 
       sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
+        if (revealed.has(section)) return; /* already revealed, skip */
 
-        // distanceBelow: 1 when top is exactly at bottom of viewport, 0 when at top of viewport
-        const distanceBelow = rect.top / vh;
+        const rect          = section.getBoundingClientRect();
+        const distanceBelow = rect.top / vh; /* 1 = 1 screen below, 0 = at top */
 
-        if (distanceBelow > 0) {
-          // Still below — blur proportionally (max blur when 1 screen away, 0 when entering)
-          const t         = Math.min(1, distanceBelow);
-          section.style.filter    = `blur(${(t * 0.2).toFixed(1)}px)`;
-          section.style.opacity   = String(1 - t * 0.5);
-          section.style.transform = `translateY(${(t * 32).toFixed(0)}px)`;
-        } else {
-          // In view or above — fully clear
+        if (distanceBelow <= 0.05) {
+          /* Fully in view — snap to revealed state */
           section.style.filter    = "blur(0px)";
           section.style.opacity   = "1";
-          section.style.transform = "translateY(0px)";
+          section.style.transform = "translateY(0px) scale(1)";
+          revealed.add(section);
+          return;
         }
 
-        section.style.transition = "filter 0.6s ease, opacity 0.6s ease, transform 0.6s ease";
-        section.style.willChange = "filter, opacity, transform";
+        if (distanceBelow > 1.2) {
+          /* Far below — just hide cheaply, no transition */
+          section.style.transition = "none";
+          section.style.filter    = "blur(6px)";
+          section.style.opacity   = "0";
+          section.style.transform = "translateY(48px) scale(0.985)";
+          return;
+        }
+
+        /* In the "approaching" zone: animate in */
+        const t = Math.min(1, distanceBelow);
+        section.style.filter    = `blur(${(t * 3).toFixed(1)}px)`;
+        section.style.opacity   = String(Math.max(0, 1 - t * 0.85));
+        section.style.transform = `translateY(${(t * 48).toFixed(1)}px) scale(${1 - t * 0.015})`;
       });
+
+      rafId = requestAnimationFrame(tick);
     };
 
-    window.addEventListener("scroll", tick, { passive: true });
-    tick();
-    return () => window.removeEventListener("scroll", tick);
+    sections.forEach((s) => {
+      s.style.transition  = "filter 0.7s cubic-bezier(0.16,1,0.3,1), opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)";
+      s.style.willChange  = "filter, opacity, transform";
+    });
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   return <div ref={wrapperRef}>{children}</div>;
