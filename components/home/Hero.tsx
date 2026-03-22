@@ -13,40 +13,6 @@ export default function Hero() {
   const ctaRef      = useRef<HTMLDivElement>(null);
   const scrollRef   = useRef<HTMLDivElement>(null);
 
-  /* ── Smooth cursor with rAF lerp ── */
-  useEffect(() => {
-    const el = document.getElementById("juno-cursor");
-    if (!el) return;
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let curX   = mouseX;
-    let curY   = mouseY;
-    let rafId  = 0;
-
-    const onMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
-
-    const tick = () => {
-      // lerp factor 0.18 — fast enough to feel responsive, smooth enough to not jitter
-      curX += (mouseX - curX) * 0.18;
-      curY += (mouseY - curY) * 0.18;
-      el.style.left = curX + "px";
-      el.style.top  = curY + "px";
-      rafId = requestAnimationFrame(tick);
-    };
-
-    window.addEventListener("mousemove", onMove, { passive: true });
-    rafId = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
-
   /* ── GSAP entrance animations ── */
   useEffect(() => {
     const run = async () => {
@@ -125,7 +91,7 @@ export default function Hero() {
         }}
       />
 
-      {/* Overlay */}
+      {/* Overlay - REDUCED gradient on left to show more image */}
       <div
         ref={overlayRef}
         className="absolute inset-0"
@@ -138,8 +104,8 @@ export default function Hero() {
               rgba(5,5,5,0.06) 100%
             ),
             linear-gradient(to right,
-              rgba(5,5,5,0.45) 0%,
-              transparent 60%
+              rgba(5,5,5,0.25) 0%,
+              transparent 45%
             )
           `,
           zIndex: 1,
@@ -166,10 +132,18 @@ export default function Hero() {
         }}
       />
 
-      {/* Content */}
+      {/* Content - LEFT ALIGNED for more image visibility */}
       <div
-        className="relative juno-container pb-16 md:pb-28"
-        style={{ zIndex: 3, paddingTop: "8rem" }}
+        className="relative pb-16 md:pb-28"
+        style={{ 
+          zIndex: 3, 
+          paddingTop: "8rem",
+          paddingLeft: "clamp(1.5rem, 4vw, 3rem)",
+          paddingRight: "clamp(1.5rem, 4vw, 3rem)",
+          maxWidth: "1200px",
+          marginLeft: "0", // Left align instead of center
+          marginRight: "auto",
+        }}
       >
         {/* Eyebrow */}
         <span

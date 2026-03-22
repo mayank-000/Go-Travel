@@ -3,6 +3,7 @@ import { Sora, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import CursorManager from "@/components/CursorManager";
 
 const sora = Sora({
   variable: "--font-sora",
@@ -29,6 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${sora.variable} ${dmSerif.variable} antialiased`}>
+        {/* Custom cursor element */}
+        <div id="juno-cursor" />
+        
+        {/* Cursor movement manager */}
+        <CursorManager />
+        
         <Navbar />
         <main>{children}</main>
         <Footer />
@@ -36,4 +43,3 @@ export default function RootLayout({
     </html>
   );
 }
-

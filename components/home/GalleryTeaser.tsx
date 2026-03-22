@@ -111,6 +111,18 @@ export default function GalleryTeaser() {
         perspective: "2000px",
       }}
     >
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px);   opacity: 0.15; }
+          50%       { transform: translateY(-28px); opacity: 0.3;  }
+        }
+        @keyframes shine {
+          0%   { transform: translateX(-100%); }
+          100% { transform: translateX(220%);  }
+        }
+      `}</style>
+
+      {/* Ambient glow — grows on scroll */}
       <div
         ref={lightRef}
         className="fixed pointer-events-none"
@@ -125,57 +137,92 @@ export default function GalleryTeaser() {
         }}
       />
 
-      <div className="juno-container relative" style={{ zIndex: 2 }}>
-        <div className="text-center mb-12 gallery-title">
-          <span
-            className="font-heading block mb-4"
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full"
             style={{
-              fontSize: "clamp(10px,1.1vw,12px)",
-              letterSpacing: "0.5em",
-              textTransform: "uppercase",
-              color: "var(--ochre)",
-              fontWeight: 600,
+              width:           "6px",
+              height:          "6px",
+              left:            `${10 + i * 6}%`,
+              top:             `${20 + (i % 4) * 20}%`,
+              background:      "var(--ochre)",
+              opacity:         0.15,
+              animation:       `float ${3 + i * 0.4}s ease-in-out infinite`,
+              animationDelay:  `${i * 0.2}s`,
             }}
-          >
-            Visual Stories
-          </span>
+          />
+        ))}
+      </div>
 
-          <h2
-            className="font-serif"
-            style={{
-              fontSize: "clamp(3rem,7vw,7rem)",
-              lineHeight: 0.95,
-              color: "var(--charcoal)",
-              fontWeight: 400,
-              marginBottom: "1.5rem",
-            }}
-          >
-            Moments that
-            <br />
-            <em style={{ color: "var(--ochre)", fontStyle: "italic" }}>breathe</em>
-          </h2>
+      {/* Top separator */}
+      <div
+        className="absolute top-0 left-0 right-0"
+        style={{
+          height:    "2px",
+          background: "linear-gradient(to right, transparent, var(--ochre), transparent)",
+          boxShadow: "0 0 20px rgba(201,160,90,0.3)",
+        }}
+      />
 
-          <p
-            className="font-heading mx-auto"
-            style={{
-              fontSize: "clamp(1rem,1.4vw,1.1rem)",
-              color: "var(--charcoal)",
-              opacity: 0.75,
-              maxWidth: "500px",
-              lineHeight: 1.7,
-              fontWeight: 300,
-            }}
-          >
-            Every photograph holds a world. Step closer.
-          </p>
-        </div>
+      <div
+        className="juno-container text-center flex flex-col items-center relative z-10"
+        style={{ gap: "2rem" }}
+      >
+        {/* Eyebrow */}
+        <span
+          className="font-heading block mb-4"
+          style={{
+            fontSize: "clamp(10px,1.1vw,12px)",
+            letterSpacing: "0.5em",
+            textTransform: "uppercase",
+            color: "var(--ochre)",
+            fontWeight: 600,
+          }}
+        >
+          Visual Stories
+        </span>
 
+        {/* Heading */}
+        <h2
+          className="font-serif gallery-title"
+          style={{
+            fontSize: "clamp(3rem,7vw,7rem)",
+            lineHeight: 0.95,
+            color: "var(--charcoal)",
+            fontWeight: 400,
+            marginBottom: "1.5rem",
+          }}
+        >
+          Moments that
+          <br />
+          <em style={{ color: "var(--ochre)", fontStyle: "italic" }}>breathe</em>
+        </h2>
+
+        <p
+          className="font-heading mx-auto gallery-title"
+          style={{
+            fontSize: "clamp(1rem,1.4vw,1.1rem)",
+            color: "var(--charcoal)",
+            opacity: 0.75,
+            maxWidth: "500px",
+            lineHeight: 1.7,
+            fontWeight: 300,
+          }}
+        >
+          Every photograph holds a world. Step closer.
+        </p>
+
+        {/* Grid - 2 columns on mobile, 4 on desktop */}
         <div
           ref={cardsRef}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5"
           style={{
             maxWidth: "1400px",
             margin: "0 auto",
+            width: "100%",
           }}
         >
           {images.map((img, i) => (
@@ -188,7 +235,7 @@ export default function GalleryTeaser() {
           ))}
         </div>
 
-        {/* FIXED CTA - proper color contrast */}
+        {/* CTA button */}
         <div className="text-center" style={{ marginTop: "clamp(4rem,8vw,6rem)" }}>
           <Link
             href="/gallery"
@@ -281,16 +328,22 @@ function FloatingCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    // Detect touch device
+    const checkTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    setIsTouchDevice(checkTouch);
+  }, []);
 
   useEffect(() => {
     if (!cardRef.current) return;
     
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouchDevice) return;
-    
+    // MAGNETIC EFFECT - Works on both desktop AND mobile now
     const depth = (index % 3) + 1;
-    const moveX = (mousePos.x - 0.5) * depth * 20;
-    const moveY = (mousePos.y - 0.5) * depth * 15;
+    
+    const moveX = (mousePos.x - 0.5) * depth * 30;    
+    const moveY = (mousePos.y - 0.5) * depth * 20;  
 
     if (!isHovered) {
       cardRef.current.style.transform = `
@@ -301,6 +354,15 @@ function FloatingCard({
     }
   }, [mousePos, index, isHovered]);
 
+  // Touch handlers for mobile
+  const handleTouchStart = () => {
+    setIsHovered(true);
+  };
+
+  const handleTouchEnd = () => {
+    setIsHovered(false);
+  };
+
   return (
     <div
       ref={cardRef}
@@ -310,8 +372,10 @@ function FloatingCard({
         transition: "transform 0.6s cubic-bezier(0.16,1,0.3,1)",
         transformStyle: "preserve-3d",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => !isTouchDevice && setIsHovered(true)}
+      onMouseLeave={() => !isTouchDevice && setIsHovered(false)}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       <div
         style={{

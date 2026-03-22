@@ -86,26 +86,48 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Custom cursor ── */
-*, *::before, *::after { cursor: none !important; }
+/* ── Custom cursor — DESKTOP ONLY, MAXIMUM PERFORMANCE ── */
+@media (hover: hover) and (pointer: fine) {
+  *, *::before, *::after { 
+    cursor: none !important; 
+  }
 
-#juno-cursor {
-  position: fixed;
-  top: 0; left: 0;
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--ochre);
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease, background 0.25s ease;
-  mix-blend-mode: difference;
+  #juno-cursor {
+    position: fixed;
+    top: 0; 
+    left: 0;
+    width: 10px; 
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ochre);
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: difference;
+    will-change: left, top;
+    /* NO transitions for instant response */
+  }
+  
+  #juno-cursor.hovering {
+    width: 40px; 
+    height: 40px;
+    background: rgba(139,101,63,0.12);
+    border: 1px solid var(--ochre);
+    mix-blend-mode: normal;
+    /* Only transition size, NOT position */
+    transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border 0.25s ease;
+  }
 }
-#juno-cursor.hovering {
-  width: 40px; height: 40px;
-  background: rgba(139,101,63,0.12);
-  border: 1px solid var(--ochre);
-  mix-blend-mode: normal;
+
+/* ── Hide cursor on mobile/touch devices ── */
+@media (hover: none) and (pointer: coarse) {
+  #juno-cursor {
+    display: none !important;
+  }
+  
+  *, *::before, *::after {
+    cursor: auto !important;
+  }
 }
 
 .font-heading { font-family: var(--font-sora), sans-serif; }
@@ -202,17 +224,6 @@ html {
 *:focus-visible {
   outline: 2px solid var(--ochre);
   outline-offset: 4px;
-}
-
-/* ── Mobile touch optimization ── */
-@media (hover: none) and (pointer: coarse) {
-  * {
-    cursor: auto !important;
-  }
-  
-  #juno-cursor {
-    display: none;
-  }
 }
 
 /* ── Utility animations ── */
